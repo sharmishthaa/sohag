@@ -101,10 +101,63 @@ function Userform() {
   }
 
 
+  const downloadFile = ({ data, fileName, fileType }) => {
+    const blob = new Blob([data], { type: fileType });
+
+    const a = document.createElement("a");
+    a.download = fileName;
+    a.href = window.URL.createObjectURL(blob);
+    const clickEvt = new MouseEvent("click", {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    });
+    a.dispatchEvent(clickEvt);
+    a.remove();
+  };
+  const exportToCsv = e => {
+    e.preventDefault();
+    // let headers = ["Id,Name,Surname,Age"];
+
+    // let usersCsv = usersData.users.reduce((acc, user) => {
+    //   const { id, name, surname, age } = user;
+    //   acc.push([id, name, surname, age].join(","));
+    //   return acc;
+    // }, []);
+
+    Meteor.call("productcat.list", (error, result) => {
+      console.log(error);
+      if (!error) {
+        console.log("success");
+        console.log(result)
+        // setProductCategory(result)
+        let headers = ["Product Category Name,Status"];
+
+        let usersCsv = result.reduce((acc, user) => {
+          const { product_category_name, status } = user;
+          acc.push([product_category_name, status].join(","));
+          return acc;
+        }, []);
+
+        downloadFile({
+          data: [...headers, ...usersCsv].join("\n"),
+          fileName: "users.csv",
+          fileType: "text/csv",
+        });
+
+      }
+      else {
+        console.log(error)
+      }
+    });
 
 
+  };
   return (
     <Card level={2} title="Customer Form">
+      {/* <button type="button" onClick={exportToCsv}>
+        Export to CSV
+      </button> */}
       <Form
         form={form}
         {...layout}
@@ -269,6 +322,7 @@ function Userform() {
 
                       <Form.Item
                         {...field}
+
                         key={"quantity-" + field.key}
                         label="Quantity"
                         name={[field.name, 'quantity']}
@@ -315,7 +369,7 @@ function Userform() {
             </Form.List>
           </Col>
           <Col className='title-cus' span={24}>
-              <Button type="primary" htmlType="submit">Submit</Button>
+            <Button type="primary" htmlType="submit">Submit</Button>
           </Col>
         </Row>
       </Form>
