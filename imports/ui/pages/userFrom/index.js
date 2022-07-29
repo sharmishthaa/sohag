@@ -1,4 +1,4 @@
-import { Typography, Button, Col, Form, Input, Row, Card, Select, DatePicker, Radio, Space, message } from 'antd'
+import { Typography, Button, Col, Form, Input, Row, InputNumber, Card, Select, DatePicker, Radio, Space, message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Meteor } from 'meteor/meteor';
@@ -16,6 +16,10 @@ function Userform() {
   const [productCategory, setProductCategory] = useState('')
   const [productNameFromCategory, setProductNameFromCategory] = useState('')
   const [productDetailsFromProduct, setProductDetailsFromProduct] = useState('')
+
+  const [totalPayment, setTotalPayment] = useState('')
+  // const [tax, setTax] = useState(0)
+
   const layout = {
     labelCol: {
       span: 5,
@@ -35,7 +39,23 @@ function Userform() {
       email: 'not a valid ${label}!',
     },
   };
-
+  console.log("Total------",totalPayment)
+  useEffect(() => {
+    console.log("Under UseEff---", form?.getFieldValue('products'))
+    if(form?.getFieldValue('products')?.length > 0){
+      let total = 0
+      form?.getFieldValue('products')?.map((data, index) => {
+        console.log("Inside--------",data)
+        if (data.price) {
+          total = total + data.price
+        }
+      })
+      total = (total * 0.05).toFixed(2)
+      setTotalPayment(total)
+    }
+    
+    
+  }, [form?.getFieldValue('products')]);
   useEffect(() => {
     getProductCategory()
   }, []);
@@ -48,32 +68,71 @@ function Userform() {
         console.log("success");
         console.log(result)
         setProductCategory(result)
+
+        //Set Form Values
+        // const fields = form.getFieldsValue()
+        // const { products } = fields
+
+        // console.log(fields, products)
+        // products = [{productCategory: '', productName: ''}]
+        // Object.assign(products[0], { productCategory: '' })
+        // Object.assign(products[0], { productName: '' })
+        // Object.assign(products[0], { actualPrice: 0 })
+        // Object.assign(products[0], { price: 0 })
+        // Object.assign(products[0], { size: '' })
+        // Object.assign(products[0], { quantity: '' })
+
+
+        form.setFieldsValue({ products })
       }
       else {
         console.log(error)
       }
     });
   }
-  const selectedCategory = (value) => {
+  const selectedCategory = (value, key) => {
     Meteor.call("product.list", { product_category: value }, (error, result) => {
       console.log(error);
       if (!error) {
         console.log("success");
         console.log(result)
         setProductNameFromCategory(result)
+
+        //Set Form Values
+        const fields = form.getFieldsValue()
+        const { products } = fields
+        Object.assign(products[key], { productName: '' })
+        Object.assign(products[key], { actualPrice: 0 })
+        Object.assign(products[key], { price: 0 })
+        Object.assign(products[key], { size: '' })
+        Object.assign(products[key], { quantity: '' })
+
+
+        form.setFieldsValue({ products })
       }
       else {
         console.log(error)
       }
     });
   }
-  const selectedProduct = (value) => {
+  const selectedProduct = (value, key) => {
     Meteor.call("productattr.list", { product: value }, (error, result) => {
       console.log(error);
       if (!error) {
         console.log("success");
         console.log(result)
         setProductDetailsFromProduct(result)
+
+        //Set Form Values
+        const fields = form.getFieldsValue()
+        const { products } = fields
+        Object.assign(products[key], { actualPrice: 0 })
+        Object.assign(products[key], { price: 0 })
+        Object.assign(products[key], { size: '' })
+        Object.assign(products[key], { quantity: '' })
+
+        form.setFieldsValue({ products })
+
       }
       else {
         console.log(error)
@@ -153,6 +212,11 @@ function Userform() {
 
 
   };
+
+  // const addCustomized = (e, f) => {
+  //   console.log(e, f)
+  // }
+  // console.log("Form is---", form, form?.getFieldValue('products'))
   return (
     <Card level={2} title="Customer Form">
       {/* <button type="button" onClick={exportToCsv}>
@@ -263,7 +327,7 @@ function Userform() {
                           },
                         ]}
                       >
-                        <Select style={{ width: 100 }} key={"select-" + field.key} onChange={(e) => selectedCategory(e)}>
+                        <Select style={{ width: 100 }} key={"select-" + field.key} onChange={(e) => selectedCategory(e, field.key)}>
                           {/* <Option value="">Select...</Option> */}
                           {productCategory?.length > 0 && productCategory.map((data, index) => (
                             <Option key={index} value={data._id}>{data.product_category_name}</Option>
@@ -271,11 +335,13 @@ function Userform() {
                         </Select>
                       </Form.Item>
 
-
+                      {console.log(form?.getFieldValue('products'))}
                       <Form.Item
                         {...field}
                         ey={"name-" + field.key}
                         label="Product Name"
+
+                        // disabled={form?.getFieldValue('products')[field.key] && !form?.getFieldValue('products')[field.key].productCategory  ? false : true}
                         name={[field.name, 'productName']}
                         rules={[
                           {
@@ -284,7 +350,9 @@ function Userform() {
                           },
                         ]}
                       >
-                        <Select style={{ width: 100 }} key={"prod name-" + field.key} onChange={(e) => selectedProduct(e)} >
+                        <Select
+                          disabled={form.getFieldValue('products')[field.key].productCategory ? false : true}
+                          style={{ width: 100 }} key={"prod name-" + field.key} onChange={(e) => selectedProduct(e, field.key)} >
                           {productNameFromCategory?.length > 0 && productNameFromCategory.map((data, index) => (
                             <Option key={index} value={data._id}>{data.product_name}</Option>
                           ))}
@@ -295,6 +363,7 @@ function Userform() {
                       <Form.Item
                         {...field}
                         key={"size-" + field.key}
+                        // disabled={form.getFieldValue('products')[field.key]?.productName ? false : true}
                         label="Size"
                         name={[field.name, 'size']}
                         rules={[
@@ -304,16 +373,19 @@ function Userform() {
                           },
                         ]}
                       >
-                        <Select style={{ width: 100 }} id={"size-select-" + field.key} key={"size select-" + field.key} onChange={(e) => {
-                          let price = productDetailsFromProduct.find((data) => data._id === e).price
+                        <Select
+                          disabled={form.getFieldValue('products')[field.key].productName ? false : true}
+                          style={{ width: 100 }} id={"size-select-" + field.key} key={"size select-" + field.key}
+                          onChange={(e) => {
+                            let price = productDetailsFromProduct.find((data) => data._id === e).price
 
-                          const fields = form.getFieldsValue()
-                          const { products } = fields
-                          Object.assign(products[field.key], { actualPrice: price })
-                          Object.assign(products[field.key], { price: price })
-                          Object.assign(products[field.key], { quantity: 1 })
-                          form.setFieldsValue({ products })
-                        }}>
+                            const fields = form.getFieldsValue()
+                            const { products } = fields
+                            Object.assign(products[field.key], { actualPrice: price })
+                            Object.assign(products[field.key], { price: price })
+                            Object.assign(products[field.key], { quantity: 1 })
+                            form.setFieldsValue({ products })
+                          }}>
                           {productDetailsFromProduct?.length > 0 && productDetailsFromProduct.map((data, index) => (
                             <Option key={index} value={data._id}>{data.size}</Option>
                           ))}
@@ -333,14 +405,16 @@ function Userform() {
                           },
                         ]}
                       >
-                        <Input style={{ width: 100 }} onChange={(e) => {
-                          console.log(form.getFieldValue('products')[field.key])
-                          console.log(parseFloat(form.getFieldValue('products')[field.key].actualPrice), e.target.value)
-                          const fields = form.getFieldsValue()
-                          const { products } = fields
-                          Object.assign(products[field.key], { price: parseFloat(form.getFieldValue('products')[field.key].actualPrice) * parseInt(e.target.value) })
-                          form.setFieldsValue({ products })
-                        }} />
+                        <InputNumber
+                          disabled={form.getFieldValue('products')[field.key].size ? false : true}
+                          style={{ width: 100 }} min="1" onChange={(e) => {
+                            // console.log(form.getFieldValue('products')[field.key])
+                            // console.log(parseFloat(form.getFieldValue('products')[field.key].actualPrice), e)
+                            const fields = form.getFieldsValue()
+                            const { products } = fields
+                            Object.assign(products[field.key], { price: parseFloat(form.getFieldValue('products')[field.key].actualPrice) * parseInt(e) })
+                            form.setFieldsValue({ products })
+                          }} />
                       </Form.Item>
                       <Form.Item
                         {...field}
@@ -362,12 +436,30 @@ function Userform() {
                   ))}
 
                   <Form.Item>
-                    <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />} />
+                    <Button type="dashed" onClick={() => add({ productCategory: '', productName: '', size: '', quantity: '', price: 0 }, { focus: true })} icon={<PlusOutlined />} />
                   </Form.Item>
                 </>
               )}
             </Form.List>
           </Col>
+          {totalPayment && totalPayment !== '0' &&
+            <>
+              <Col className='title-cus' span={12}>  <Title level={5}>Amount: {totalPayment}</Title></Col>
+              <Col className='custom-width' span={12}>
+                <Form.Item
+                  name="totalPayment"
+                  rules={[
+                    {
+                      required: false, type: 'totalPayment'
+                    },
+                  ]}
+                >
+                  <Input readOnly className='form-input' name="totalPayment" value={totalPayment} />
+                </Form.Item>
+              </Col>
+            </>
+          }
+
           <Col className='title-cus' span={24}>
             <Button type="primary" htmlType="submit">Submit</Button>
           </Col>
