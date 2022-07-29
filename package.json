@@ -1,0 +1,31 @@
+{
+  "name": "simple",
+  "private": true,
+  "scripts": {
+    "start": "meteor run",
+    "test": "meteor test --once --driver-package meteortesting:mocha",
+    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+    "visualize": "meteor --production --extra-packages bundle-visualizer"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.17.9",
+    "@styled-icons/fa-solid": "^10.34.0",
+    "antd": "^4.21.6",
+    "bcrypt": "^5.0.1",
+    "meteor-node-stubs": "^1.2.1",
+    "node-excel-export": "^1.4.4",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router": "^6.3.0",
+    "react-router-dom": "^6.3.0",
+    "simpl-schema": "^1.12.2",
+    "styled-components": "^5.3.5"
+  },
+  "meteor": {
+    "mainModule": {
+      "client": "client/main.jsx",
+      "server": "server/main.js"
+    },
+    "testModule": "tests/main.js"
+  }
+}
