@@ -42,7 +42,12 @@ function Userform() {
     }, 0)
   }
   }
-  
+  const removeFormFields = (idx) => {
+    let list = [...formCustomized]
+    list.splice(idx, 1)
+    setFormCustomized(list)
+
+  }
   useEffect(() => {
     getProductCategory()
   }, []);
@@ -78,6 +83,7 @@ function Userform() {
     });
   }
   const selectedCategory = (value, key) => {
+    console.log(key)
     Meteor.call("product.list", { product_category: value }, (error, result) => {
       console.log(error);
       if (!error) {
@@ -274,8 +280,9 @@ function Userform() {
             <Form.List name="products">
               {(fields, { add, remove }) => (
                 <>
-                  {fields.map((field) => (
+                  {fields.map((field, index) => (
                     <Space align="baseline" key={"space-" + field.key}>
+                      {console.log(index)}
                       <Form.Item
                         {...field}
                         key={"category-" + field.key}
@@ -288,7 +295,7 @@ function Userform() {
                           },
                         ]}
                       >
-                        <Select style={{ width: 100 }} key={"select-" + field.key} onChange={(e) => selectedCategory(e, field.key)}>
+                        <Select style={{ width: 100 }} key={"select-" + field.key} onChange={(e) => selectedCategory(e, index)}>
                           {/* <Option value="">Select...</Option> */}
                           {productCategory?.length > 0 && productCategory.map((data, index) => (
                             <Option key={index} value={data._id}>{data.product_category_name}</Option>
@@ -313,8 +320,8 @@ function Userform() {
                         ]}
                       >
                         <Select
-                          disabled={form.getFieldValue('products')[field.key]?.productCategory ? false : true}
-                          style={{ width: 100 }} key={"prod name-" + field.key} onChange={(e) => selectedProduct(e, field.key)} >
+                          disabled={form.getFieldValue('products')[index]?.productCategory ? false : true}
+                          style={{ width: 100 }} key={"prod name-" + field.key} onChange={(e) => selectedProduct(e, index)} >
                           {productNameFromCategory?.length > 0 && productNameFromCategory.map((data, index) => (
                             <Option key={index} value={data._id}>{data.product_name}</Option>
                           ))}
@@ -336,16 +343,16 @@ function Userform() {
                         ]}
                       >
                         <Select
-                          disabled={form.getFieldValue('products')[field.key]?.productName ? false : true}
-                          style={{ width: 100 }} id={"size-select-" + field.key} key={"size select-" + field.key}
+                          disabled={form.getFieldValue('products')[index]?.productName ? false : true}
+                          style={{ width: 100 }} id={"size-select-" + field.key} key={"size select-" + index}
                           onChange={(e) => {
                             let price = productDetailsFromProduct.find((data) => data._id === e).price
 
                             const fields = form.getFieldsValue()
                             const { products } = fields
-                            Object.assign(products[field.key], { actualPrice: price })
-                            Object.assign(products[field.key], { price: price })
-                            Object.assign(products[field.key], { quantity: 1 })
+                            Object.assign(products[index], { actualPrice: price })
+                            Object.assign(products[index], { price: price })
+                            Object.assign(products[index], { quantity: 1 })
                             form.setFieldsValue({ products })
                             setFormCustomized( products )
                           }}>
@@ -369,13 +376,13 @@ function Userform() {
                         ]}
                       >
                         <InputNumber
-                          disabled={form.getFieldValue('products')[field.key]?.size ? false : true}
+                          disabled={form.getFieldValue('products')[index]?.size ? false : true}
                           style={{ width: 100 }} min="1" onChange={(e) => {
                             // console.log(form.getFieldValue('products')[field.key])
                             // console.log(parseFloat(form.getFieldValue('products')[field.key].actualPrice), e)
                             const fields = form.getFieldsValue()
                             const { products } = fields
-                            Object.assign(products[field.key], { price: parseFloat(form.getFieldValue('products')[field.key].actualPrice) * parseInt(e) })
+                            Object.assign(products[index], { price: parseFloat(form.getFieldValue('products')[index].actualPrice) * parseInt(e) })
                             form.setFieldsValue({ products })
                             setFormCustomized( products )
                           }} />
@@ -395,7 +402,7 @@ function Userform() {
                         <Input style={{ width: 100 }} disabled />
                       </Form.Item>
 
-                      <MinusCircleOutlined onClick={() => {remove(field.name)}} />
+                      <MinusCircleOutlined onClick={() => {removeFormFields(index); remove(field.name)}} />
                     </Space>
                   ))}
 
