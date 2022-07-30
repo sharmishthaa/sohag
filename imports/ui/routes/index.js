@@ -43,6 +43,7 @@ const Routers = () => {
                             <Route path="list" element={<ClientdataList />} />
                         </Route>
                     </Route>
+                    <Route path="/userform" element={<Userform />} />
                     <Route path="/*" element={<Navigate replace to="/auth/client/list" />} />
                 </Routes>
             }

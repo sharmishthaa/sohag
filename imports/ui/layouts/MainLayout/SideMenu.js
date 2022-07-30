@@ -39,7 +39,7 @@ const SideMenu = ({collapsed}) => {
        }, [])
 
       const items = [
-        getItem(<Link to="/auth/client/list">Client Details</Link>, '1', <CarOutlined />),
+        getItem(<Link to="/auth/client/list">Order Details</Link>, '1', <CarOutlined />),
         ];
  
     return (
