@@ -1,12 +1,13 @@
-import { Typography, Button, Col, Form, Input, Row, InputNumber, Card, Select, DatePicker, Radio, Space, message } from 'antd'
+import { Typography, Button, Col, Form, Input, Row, InputNumber, Card, Select, Upload, Radio, Space, message } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Meteor } from 'meteor/meteor';
 import { useNavigate } from 'react-router-dom';
 const { Option } = Select;
-// import './style.less';
+import * as XLSX from "xlsx";
 import 'antd/dist/antd.css';
 import moment from "moment";
+import { UploadOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 
@@ -19,6 +20,7 @@ function Userform() {
   const [otherMode, setOtherMode] = useState('')
   const [totalPayment, setTotalPayment] = useState('')
   const [formCustomized, setFormCustomized] = useState('')
+  const [massData, setMassData] = useState('')
 
   const layout = {
     labelCol: {
@@ -34,13 +36,13 @@ function Userform() {
   };
 
   console.log("Total------", totalPayment)
-  console.log("Form Check---",formCustomized)
+  console.log("Form Check---", formCustomized)
   const getTotalAmount = () => {
-    if(formCustomized?.length >0){
-    return formCustomized?.reduce((accumulator, object) => {
-      return accumulator + parseInt(object.price);
-    }, 0)
-  }
+    if (formCustomized?.length > 0) {
+      return formCustomized?.reduce((accumulator, object) => {
+        return accumulator + parseInt(object.price);
+      }, 0)
+    }
   }
   const removeFormFields = (idx) => {
     let list = [...formCustomized]
@@ -103,7 +105,7 @@ function Userform() {
 
 
         form.setFieldsValue({ products })
-        setFormCustomized( products )
+        setFormCustomized(products)
       }
       else {
         console.log(error)
@@ -127,7 +129,7 @@ function Userform() {
         Object.assign(products[key], { quantity: '' })
 
         form.setFieldsValue({ products })
-        setFormCustomized( products )
+        setFormCustomized(products)
 
       }
       else {
@@ -155,6 +157,136 @@ function Userform() {
     }, "1000")
   }
 
+
+  const uploadExcelForProduct = async (e) => {
+    if (e.target.files.length === 0) return;
+
+    if (e.target.files) {
+      console.log(e.target.files)
+
+      let fileParts = e.target.files[0].name.split('.')
+      let fileSize = e.target.files[0].size;
+      let fileName = fileParts[0];
+      let fileType = fileParts[1];
+      // productcat.test
+
+      let f = e.target.files[0];
+      let name = f.name;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+
+        const bstr = evt.target.result;
+        const wb = XLSX.read(bstr, { type: "binary" });
+        const wsname = wb.SheetNames[0];
+        const ws = wb.Sheets[wsname];
+
+        const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
+        console.log("Data>>>" + data);// shows that excel data is read
+        let lines = data.split("\n");
+        let result = [];
+        let headers = lines[0].split(",");
+        for (let i = 1; i < lines.length; i++) {
+          let obj = {};
+          let currentline = lines[i].split(",");
+          for (let j = 0; j < headers.length; j++) {
+            obj[headers[j]] = currentline[j];
+          }
+          result.push(obj);
+        }
+
+        console.log(JSON.stringify(result))
+        let JSONFulldataFromExcel = JSON.parse(JSON.stringify(result))
+        console.log(JSONFulldataFromExcel.length)
+        let roleNames
+        let roles
+        let massUploadData = []
+
+        JSONFulldataFromExcel && JSONFulldataFromExcel.length > 0 && JSONFulldataFromExcel.map((data, index) => {
+          if (data['Product Category Name']) {
+
+            let collectedData = {
+              'productCategoryName': data['Product Category Name'] ? data['Product Category Name'] : '',
+              'status': data['Status'] ? data['Status'] : '',
+            }
+            massUploadData.push(collectedData)
+            console.log(massUploadData)
+
+            setMassData(massUploadData)
+            // setFile(e.target.files[0])
+          } else {
+          }
+
+        })
+      };
+      reader.readAsBinaryString(f);
+    }
+  }
+  const upLoadExcelDataForProductDetails = () => {
+    Meteor.call("productcat.test",massData, (error, result) => {
+      console.log(error);
+      if (!error) {
+        console.log("success");
+        console.log(result)
+        alert("upload Successfully")
+      }
+      else {
+        console.log(error)
+      }
+    });
+  }
+  console.log("mass-------", massData)
+  const downloadFile = ({ data, fileName, fileType }) => {
+    const blob = new Blob([data], { type: fileType });
+
+    const a = document.createElement("a");
+    a.download = fileName;
+    a.href = window.URL.createObjectURL(blob);
+    const clickEvt = new MouseEvent("click", {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    });
+    a.dispatchEvent(clickEvt);
+    a.remove();
+  };
+  const exportToCsv = e => {
+    e.preventDefault();
+    // let headers = ["Id,Name,Surname,Age"];
+
+    // let usersCsv = usersData.users.reduce((acc, user) => {
+    //   const { id, name, surname, age } = user;
+    //   acc.push([id, name, surname, age].join(","));
+    //   return acc;
+    // }, []);
+
+    Meteor.call("productcat.list", (error, result) => {
+      console.log(error);
+      if (!error) {
+        console.log("success");
+        console.log(result)
+        // setProductCategory(result)
+        let headers = ["Product Category Name,Status"];
+
+        let usersCsv = result.reduce((acc, user) => {
+          const { product_category_name, status } = user;
+          acc.push([product_category_name, status].join(","));
+          return acc;
+        }, []);
+
+        downloadFile({
+          data: [...headers, ...usersCsv].join("\n"),
+          fileName: "users.csv",
+          fileType: "text/csv",
+        });
+
+      }
+      else {
+        console.log(error)
+      }
+    });
+
+
+  };
   // const addCustomized = (e, f) => {
   //   console.log(e, f)
   // }
@@ -169,6 +301,11 @@ function Userform() {
         {...layout}
         onFinish={onFinish} >
         <Row className='module-heading'>
+          <input id="file-upload" accept=".xlsx,.xls,.csv" type="file" name="file-upload" onChange={(e) => uploadExcelForProduct(e, '')} />
+          {/* <Upload >
+            <Button onClick={(e)=> uploadExcelForProduct(e)} icon={<UploadOutlined />}>Click to Upload</Button>
+          </Upload> */}
+          <Button type="primary" onClick={upLoadExcelDataForProductDetails}>Submit</Button>
           <Col className='title-cus' span={24}>  <Title level={5}>Full Name</Title></Col>
           <Col className='custom-width' span={12}>
             <Form.Item
@@ -249,7 +386,7 @@ function Userform() {
           <Col className='custom-width' span={12}>
             <Form.Item
               name="postal_code"
-              rules={[{ required: true, type: "number", min:100000, max:999999, message: '6 digits Postal/Zip Code Required!' }]}
+              rules={[{ required: true, type: "number", min: 100000, max: 999999, message: '6 digits Postal/Zip Code Required!' }]}
             >
               <InputNumber style={{ width: '101%' }} placeholder='Postal/Zip Code' />
             </Form.Item>
@@ -260,20 +397,20 @@ function Userform() {
           <Col className='custom-width' span={12}>
             <Form.Item
               name="phone"
-              rules={[{ required: true, type: "number", min:1000000000, max:9999999999, message: '10 digits Phone No Required!' }]}
+              rules={[{ required: true, type: "number", min: 1000000000, max: 9999999999, message: '10 digits Phone No Required!' }]}
             >
               <InputNumber style={{ width: '101%' }} placeholder="XXXXXXXXXX" />
             </Form.Item>
           </Col>
           <Col className='custom-width' span={12}>
             <Form.Item
-                name="order_type"
-                rules={[{ required: true, message: 'Order Type Required!' }]}
-              >
-                <Radio.Group>
-                  <Radio value="prepaid">Prepaid</Radio>
-                  <Radio value="cod">COD</Radio>
-                </Radio.Group>
+              name="order_type"
+              rules={[{ required: true, message: 'Order Type Required!' }]}
+            >
+              <Radio.Group>
+                <Radio value="prepaid">Prepaid</Radio>
+                <Radio value="cod">COD</Radio>
+              </Radio.Group>
             </Form.Item>
           </Col>
           <Col className='title-cus' span={24}>  <Title level={5}>Products</Title></Col>
@@ -305,7 +442,7 @@ function Userform() {
                       </Form.Item>
 
                       {console.log(form?.getFieldValue('products'))}
-                      
+
                       <Form.Item
                         {...field}
                         ey={"name-" + field.key}
@@ -355,7 +492,7 @@ function Userform() {
                             Object.assign(products[index], { price: price })
                             Object.assign(products[index], { quantity: 1 })
                             form.setFieldsValue({ products })
-                            setFormCustomized( products )
+                            setFormCustomized(products)
                           }}>
                           {productDetailsFromProduct?.length > 0 && productDetailsFromProduct.map((data, index) => (
                             <Option key={index} value={data._id}>{data.size}</Option>
@@ -385,7 +522,7 @@ function Userform() {
                             const { products } = fields
                             Object.assign(products[index], { price: parseFloat(form.getFieldValue('products')[index].actualPrice) * parseInt(e) })
                             form.setFieldsValue({ products })
-                            setFormCustomized( products )
+                            setFormCustomized(products)
                           }} />
                       </Form.Item>
                       <Form.Item
@@ -403,7 +540,7 @@ function Userform() {
                         <Input style={{ width: 100 }} disabled />
                       </Form.Item>
 
-                      <MinusCircleOutlined onClick={() => {removeFormFields(index); remove(field.name)}} />
+                      <MinusCircleOutlined onClick={() => { removeFormFields(index); remove(field.name) }} />
                     </Space>
                   ))}
 
