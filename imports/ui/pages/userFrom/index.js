@@ -55,7 +55,21 @@ function Userform() {
     }
     
     
-  }, [form?.getFieldValue('products')]);
+  }, [form, form?.getFieldValue('products')]);
+
+  const getTotal = () => {
+    if(form?.getFieldValue('products')?.length > 0){
+      let total = 0
+      form?.getFieldValue('products')?.map((data, index) => {
+        console.log("Inside--------",data)
+        if (data.price) {
+          total = total + data.price
+        }
+      })
+      total = (total * 0.05).toFixed(2)
+      setTotalPayment(total)
+    }
+  }
   useEffect(() => {
     getProductCategory()
   }, []);
