@@ -563,7 +563,8 @@ function Userform() {
                     },
                   ]}
                 >
-                  <Input readOnly className='form-input' value={getTotalAmount()} />
+                  <Input readOnly className='form-input' id="pay" name="pay" defaultValue={getTotalAmount()} value={getTotalAmount()} />
+                  <input type="hidden"  value={getTotalAmount()} />
                 </Form.Item>
               </Col>
             </>
