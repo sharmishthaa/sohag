@@ -45,6 +45,7 @@ function Userform() {
   
   useEffect(() => {
     getProductCategory()
+    document.getElementById("add_button").click();
   }, []);
   const getProductCategory = () => {
     // const lo_cardata = { ...values }
@@ -160,7 +161,7 @@ function Userform() {
       <Form
         form={form}
         {...layout}
-        onFinish={onFinish}>
+        onFinish={onFinish} >
         <Row className='module-heading'>
           <Col className='title-cus' span={24}>  <Title level={5}>Full Name</Title></Col>
           <Col className='custom-width' span={12}>
@@ -400,7 +401,7 @@ function Userform() {
                   ))}
 
                   <Form.Item>
-                    <Button type="dashed" onClick={() => add({ productCategory: '', productName: '', size: '', quantity: '', price: 0 }, { focus: true })} icon={<PlusOutlined />} />
+                    <Button id="add_button" type="dashed" onClick={() => add({ productCategory: '', productName: '', size: '', quantity: '', price: 0 }, { focus: true })} icon={<PlusOutlined />} />
                   </Form.Item>
                 </>
               )}
