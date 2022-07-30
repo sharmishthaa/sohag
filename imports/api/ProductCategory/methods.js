@@ -11,7 +11,8 @@ Meteor.methods({
     'productcat.list'() {
         return ProductCatCollection.find({}).fetch()
     },
-    'productcat.test'() {
-        return 
+    'productcat.test'(values) {
+        console.log(values)
+        return values;
     },
 })
