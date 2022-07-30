@@ -51,10 +51,10 @@ Schemas.Clientdata = new SimpleSchema({
     label: 'Order Type',
     optional: false,
   },
-  totalPayment: {
+  total_payment: {
     type: String,
     label: 'Total Payment',
-    optional: true,
+    optional: false,
   },
   product: {
     type: Array,

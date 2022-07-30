@@ -419,14 +419,14 @@ function Userform() {
               <Col className='title-cus' span={12}>  <Title level={5}>Amount: {getTotalAmount()}</Title></Col>
               <Col className='custom-width' span={12}>
                 <Form.Item
-                  name="totalPayment"
+                  name="total_payment"
                   rules={[
                     {
-                      required: false, type: 'totalPayment'
+                      required: false, type: 'total_payment'
                     },
                   ]}
                 >
-                  {/* <Input readOnly className='form-input' name="totalPayment" value={getTotalAmount()} /> */}
+                  <Input readOnly className='form-input' value={getTotalAmount()} />
                 </Form.Item>
               </Col>
             </>
@@ -444,7 +444,7 @@ function Userform() {
                   <Radio value="bank_transfer">Bank Transfer</Radio>
                   <Radio value="cash">Cash</Radio>
                   <Radio value="cod">COD (Only For COD Order)</Radio>
-                  <Radio value={otherMode}>Other<Input readOnly className='form-input' name="totalPayment" onChange={(e)=>{setOtherMode(e)}}/></Radio>
+                  <Radio value={otherMode}>Other<Input readOnly className='form-input' onChange={(e)=>{setOtherMode(e)}}/></Radio>
                 </Radio.Group>
             </Form.Item>
           </Col>

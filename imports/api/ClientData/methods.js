@@ -18,7 +18,7 @@ Meteor.methods({
             postal_code:values.postal_code,
             phone:values.phone,
             order_type:values.order_type,
-            totalPayment:values.totalPayment,
+            total_payment:values.total_payment,
             product:values.products,
             payment_mode:values.payment_mode,
             order_date_time:new Date(),
