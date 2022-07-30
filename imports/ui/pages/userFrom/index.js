@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Meteor } from 'meteor/meteor';
 import { useNavigate } from 'react-router-dom';
-const { Option } = Select;
 import * as XLSX from "xlsx";
 import 'antd/dist/antd.css';
 import moment from "moment";
 import { UploadOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
+const { Option } = Select;
 
 function Userform() {
   let navigate = useNavigate();

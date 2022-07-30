@@ -101,7 +101,7 @@ function ClientdataList() {
     //   return acc;
     // }, []);
 
-    Meteor.call("orderdata.list", lo_orderdata, (error, result) => {
+    Meteor.call("orderdata.details", lo_orderdata, (error, result) => {
       console.log(error);
       const d = new Date();
       filenmae = 'order_details_'+d.getHours()+'_'+d.getMinutes()+'_'+d.getMonth()+'_'+d.getDate()+'.csv'

@@ -28,7 +28,7 @@ Meteor.methods({
             // email:values.email, 
         })
     },
-    'orderdata.list'({...values}) {
+    'orderdata.details'({...values}) {
         let match_feilds = {}
         if(values.from_date)
         {
@@ -99,5 +99,8 @@ Meteor.methods({
             ]
         ).toArray().await();
         return client_data
+    },
+    'orderdata.list'({...values}) {
+        return ClientDataCollection.find().fetch()
     },
 })
