@@ -16,7 +16,7 @@ function Userform() {
   const [productCategory, setProductCategory] = useState('')
   const [productNameFromCategory, setProductNameFromCategory] = useState('')
   const [productDetailsFromProduct, setProductDetailsFromProduct] = useState('')
-
+  const [otherMode, setOtherMode] = useState('')
   const [totalPayment, setTotalPayment] = useState('')
   // const [tax, setTax] = useState(0)
 
@@ -33,19 +33,13 @@ function Userform() {
     }
   };
 
-  const validateMessages = {
-    required: '${label} is required!',
-    types: {
-      email: 'not a valid ${label}!',
-    },
-  };
-  console.log("Total------",totalPayment)
+  console.log("Total------", totalPayment)
   useEffect(() => {
     console.log("Under UseEff---", form?.getFieldValue('products'))
-    if(form?.getFieldValue('products')?.length > 0){
+    if (form?.getFieldValue('products')?.length > 0) {
       let total = 0
       form?.getFieldValue('products')?.map((data, index) => {
-        console.log("Inside--------",data)
+        console.log("Inside--------", data)
         if (data.price) {
           total = total + data.price
         }
@@ -53,8 +47,8 @@ function Userform() {
       total = (total * 0.05).toFixed(2)
       setTotalPayment(total)
     }
-    
-    
+
+
   }, [form?.getFieldValue('products')]);
   useEffect(() => {
     getProductCategory()
@@ -141,10 +135,10 @@ function Userform() {
   }
 
   const onFinish = (values) => {
-    console.log(values)
-    const lo_cardata = { ...values }
-    lo_cardata.dob = moment(values.dob).toDate()
-    Meteor.call("clientdata.insert", lo_cardata, (error, result) => {
+    // console.log(values)
+    const lo_orderdata = { ...values }
+    lo_orderdata.dob = moment(values.dob).toDate()
+    Meteor.call("orderdata.insert", lo_orderdata, (error, result) => {
       console.log(error);
       if (!error) {
         message.success("Order Requested");
@@ -159,60 +153,6 @@ function Userform() {
     }, "1000")
   }
 
-
-  const downloadFile = ({ data, fileName, fileType }) => {
-    const blob = new Blob([data], { type: fileType });
-
-    const a = document.createElement("a");
-    a.download = fileName;
-    a.href = window.URL.createObjectURL(blob);
-    const clickEvt = new MouseEvent("click", {
-      view: window,
-      bubbles: true,
-      cancelable: true,
-    });
-    a.dispatchEvent(clickEvt);
-    a.remove();
-  };
-  const exportToCsv = e => {
-    e.preventDefault();
-    // let headers = ["Id,Name,Surname,Age"];
-
-    // let usersCsv = usersData.users.reduce((acc, user) => {
-    //   const { id, name, surname, age } = user;
-    //   acc.push([id, name, surname, age].join(","));
-    //   return acc;
-    // }, []);
-
-    Meteor.call("productcat.list", (error, result) => {
-      console.log(error);
-      if (!error) {
-        console.log("success");
-        console.log(result)
-        // setProductCategory(result)
-        let headers = ["Product Category Name,Status"];
-
-        let usersCsv = result.reduce((acc, user) => {
-          const { product_category_name, status } = user;
-          acc.push([product_category_name, status].join(","));
-          return acc;
-        }, []);
-
-        downloadFile({
-          data: [...headers, ...usersCsv].join("\n"),
-          fileName: "users.csv",
-          fileType: "text/csv",
-        });
-
-      }
-      else {
-        console.log(error)
-      }
-    });
-
-
-  };
-
   // const addCustomized = (e, f) => {
   //   console.log(e, f)
   // }
@@ -225,18 +165,13 @@ function Userform() {
       <Form
         form={form}
         {...layout}
-        validateMessages={validateMessages}
         onFinish={onFinish}>
         <Row className='module-heading'>
           <Col className='title-cus' span={24}>  <Title level={5}>Full Name</Title></Col>
           <Col className='custom-width' span={12}>
             <Form.Item
               name="first_name"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
+              rules={[{ required: true, message: 'First Name Required!' }]}
             >
               <Input className='form-input' placeholder='First Name' />
             </Form.Item>
@@ -244,16 +179,12 @@ function Userform() {
           <Col className='custom-width' span={12}>
             <Form.Item
               name="last_name"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
+              rules={[{ required: true, message: 'Last Name Required!' }]}
             >
               <Input className='form-input' placeholder='Last Name' />
             </Form.Item>
           </Col>
-          <Col className='title-cus' span={12}>  <Title level={5}>Gender</Title></Col>
+          {/* <Col className='title-cus' span={12}>  <Title level={5}>Gender</Title></Col>
           <Col className='title-cus' span={12}>  <Title level={5}>Date of Birth</Title></Col>
           <Col className='custom-width' span={12}>
             <Form.Item
@@ -280,35 +211,70 @@ function Userform() {
             ]}
           >
             <DatePicker style={{ width: '500%' }} placeholder="00-00-0000" />
-          </Form.Item>
-          <Col className='title-cus' span={12}>  <Title level={5}>Email</Title></Col>
-          <Col className='title-cus' span={12}>  <Title level={5}>Phone No</Title></Col>
+          </Form.Item> */}
+          <Col className='title-cus' span={24}>  <Title level={5}>Address</Title></Col>
           <Col className='custom-width' span={12}>
             <Form.Item
-              name="email"
-              rules={[
-                {
-                  required: true, type: 'email'
-                },
-              ]}
+              name="address_line_1"
+              rules={[{ required: true, message: 'Address Line 1 Required!' }]}
             >
-              <Input className='form-input' placeholder='Enter email' />
+              <Input className='form-input' placeholder='Address Line 1' />
             </Form.Item>
           </Col>
+          <Col className='custom-width' span={12}>
+            <Form.Item
+              name="address_line_2"
+            >
+              <Input className='form-input' placeholder='Address Line 2' />
+            </Form.Item>
+          </Col>
+          <Col className='custom-width' span={12}>
+            <Form.Item
+              name="city"
+              rules={[{ required: true, message: 'City Required!' }]}
+            >
+              <Input className='form-input' placeholder='City' />
+            </Form.Item>
+          </Col>
+          <Col className='custom-width' span={12}>
+            <Form.Item
+              name="state"
+              rules={[{ required: true, message: 'State Required!' }]}
+            >
+              <Input className='form-input' placeholder='State' />
+            </Form.Item>
+          </Col>
+          <Col className='custom-width' span={12}>
+            <Form.Item
+              name="postal_code"
+              rules={[{ required: true, type: "number", min:100000, max:999999, message: '6 digits Postal/Zip Code Required!' }]}
+            >
+              <InputNumber style={{ width: '101%' }} placeholder='Postal/Zip Code' />
+            </Form.Item>
+          </Col>
+          <Col className='title-cus' span={12}> </Col>
+          <Col className='title-cus' span={12}>  <Title level={5}>Phone No</Title></Col>
+          <Col className='title-cus' span={12}>  <Title level={5}>Order Type</Title></Col>
           <Col className='custom-width' span={12}>
             <Form.Item
               name="phone"
-              rules={[
-                {
-                  required: true
-                }
-              ]}
+              rules={[{ required: true, type: "number", min:1000000000, max:9999999999, message: '10 digits Phone No Required!' }]}
             >
-              <Input style={{ width: '101%' }} placeholder="XXXXXXXXXX" />
+              <InputNumber style={{ width: '101%' }} placeholder="XXXXXXXXXX" />
             </Form.Item>
           </Col>
-
-          <Col className='title-cus' span={24}>  <Title level={5}>Add products</Title></Col>
+          <Col className='custom-width' span={12}>
+            <Form.Item
+                name="order_type"
+                rules={[{ required: true, message: 'Order Type Required!' }]}
+              >
+                <Radio.Group>
+                  <Radio value="prepaid">Prepaid</Radio>
+                  <Radio value="cod">COD</Radio>
+                </Radio.Group>
+            </Form.Item>
+          </Col>
+          <Col className='title-cus' span={24}>  <Title level={5}>Products</Title></Col>
           <Col className='custom-width' span={24} >
             <Form.List name="products">
               {(fields, { add, remove }) => (
@@ -459,7 +425,23 @@ function Userform() {
               </Col>
             </>
           }
-
+          <Col className='title-cus' span={24}>  <Title level={5}>Payment Mode</Title></Col>
+          <Col className='custom-width' span={12}>
+            <Form.Item
+                name="payment_mode"
+                rules={[{ required: true, message: 'Payment Mode Required!' }]}
+              >
+                <Radio.Group>
+                  <Radio value="gpay">Google Pay</Radio>
+                  <Radio value="phonepe">Phone Pe</Radio>
+                  <Radio value="paytm">Paytm</Radio>
+                  <Radio value="bank_transfer">Bank Transfer</Radio>
+                  <Radio value="cash">Cash</Radio>
+                  <Radio value="cod">COD (Only For COD Order)</Radio>
+                  <Radio value={otherMode}>Other<Input readOnly className='form-input' name="totalPayment" onChange={(e)=>{setOtherMode(e)}}/></Radio>
+                </Radio.Group>
+            </Form.Item>
+          </Col>
           <Col className='title-cus' span={24}>
             <Button type="primary" htmlType="submit">Submit</Button>
           </Col>
