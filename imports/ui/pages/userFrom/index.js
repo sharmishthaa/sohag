@@ -18,7 +18,7 @@ function Userform() {
   const [productDetailsFromProduct, setProductDetailsFromProduct] = useState('')
   const [otherMode, setOtherMode] = useState('')
   const [totalPayment, setTotalPayment] = useState('')
-  // const [tax, setTax] = useState(0)
+  const [formCustomized, setFormCustomized] = useState('')
 
   const layout = {
     labelCol: {
@@ -34,7 +34,15 @@ function Userform() {
   };
 
   console.log("Total------", totalPayment)
-
+  console.log("Form Check---",formCustomized)
+  const getTotalAmount = () => {
+    if(formCustomized?.length >0){
+    return formCustomized?.reduce((accumulator, object) => {
+      return accumulator + parseInt(object.price);
+    }, 0)
+  }
+  }
+  
   useEffect(() => {
     getProductCategory()
   }, []);
@@ -62,7 +70,7 @@ function Userform() {
         // Object.assign(products[0], { quantity: '' })
 
 
-        form.setFieldsValue({ products })
+        // form.setFieldsValue({ products })
       }
       else {
         console.log(error)
@@ -88,6 +96,7 @@ function Userform() {
 
 
         form.setFieldsValue({ products })
+        setFormCustomized( products )
       }
       else {
         console.log(error)
@@ -111,6 +120,7 @@ function Userform() {
         Object.assign(products[key], { quantity: '' })
 
         form.setFieldsValue({ products })
+        setFormCustomized( products )
 
       }
       else {
@@ -287,6 +297,7 @@ function Userform() {
                       </Form.Item>
 
                       {console.log(form?.getFieldValue('products'))}
+                      
                       <Form.Item
                         {...field}
                         ey={"name-" + field.key}
@@ -302,7 +313,7 @@ function Userform() {
                         ]}
                       >
                         <Select
-                          disabled={form.getFieldValue('products')[field.key].productCategory ? false : true}
+                          disabled={form.getFieldValue('products')[field.key]?.productCategory ? false : true}
                           style={{ width: 100 }} key={"prod name-" + field.key} onChange={(e) => selectedProduct(e, field.key)} >
                           {productNameFromCategory?.length > 0 && productNameFromCategory.map((data, index) => (
                             <Option key={index} value={data._id}>{data.product_name}</Option>
@@ -325,7 +336,7 @@ function Userform() {
                         ]}
                       >
                         <Select
-                          disabled={form.getFieldValue('products')[field.key].productName ? false : true}
+                          disabled={form.getFieldValue('products')[field.key]?.productName ? false : true}
                           style={{ width: 100 }} id={"size-select-" + field.key} key={"size select-" + field.key}
                           onChange={(e) => {
                             let price = productDetailsFromProduct.find((data) => data._id === e).price
@@ -336,6 +347,7 @@ function Userform() {
                             Object.assign(products[field.key], { price: price })
                             Object.assign(products[field.key], { quantity: 1 })
                             form.setFieldsValue({ products })
+                            setFormCustomized( products )
                           }}>
                           {productDetailsFromProduct?.length > 0 && productDetailsFromProduct.map((data, index) => (
                             <Option key={index} value={data._id}>{data.size}</Option>
@@ -357,7 +369,7 @@ function Userform() {
                         ]}
                       >
                         <InputNumber
-                          disabled={form.getFieldValue('products')[field.key].size ? false : true}
+                          disabled={form.getFieldValue('products')[field.key]?.size ? false : true}
                           style={{ width: 100 }} min="1" onChange={(e) => {
                             // console.log(form.getFieldValue('products')[field.key])
                             // console.log(parseFloat(form.getFieldValue('products')[field.key].actualPrice), e)
@@ -365,6 +377,7 @@ function Userform() {
                             const { products } = fields
                             Object.assign(products[field.key], { price: parseFloat(form.getFieldValue('products')[field.key].actualPrice) * parseInt(e) })
                             form.setFieldsValue({ products })
+                            setFormCustomized( products )
                           }} />
                       </Form.Item>
                       <Form.Item
@@ -382,7 +395,7 @@ function Userform() {
                         <Input style={{ width: 100 }} disabled />
                       </Form.Item>
 
-                      <MinusCircleOutlined onClick={() => remove(field.name)} />
+                      <MinusCircleOutlined onClick={() => {remove(field.name)}} />
                     </Space>
                   ))}
 
@@ -393,9 +406,9 @@ function Userform() {
               )}
             </Form.List>
           </Col>
-          {totalPayment && totalPayment !== '0' &&
+          {/* {getTotalAmount() && getTotalAmount() > 0 && */}
             <>
-              <Col className='title-cus' span={12}>  <Title level={5}>Amount: {totalPayment}</Title></Col>
+              <Col className='title-cus' span={12}>  <Title level={5}>Amount: {getTotalAmount()}</Title></Col>
               <Col className='custom-width' span={12}>
                 <Form.Item
                   name="totalPayment"
@@ -405,11 +418,11 @@ function Userform() {
                     },
                   ]}
                 >
-                  <Input readOnly className='form-input' name="totalPayment" value={totalPayment} />
+                  {/* <Input readOnly className='form-input' name="totalPayment" value={getTotalAmount()} /> */}
                 </Form.Item>
               </Col>
             </>
-          }
+          {/* } */}
           <Col className='title-cus' span={24}>  <Title level={5}>Payment Mode</Title></Col>
           <Col className='custom-width' span={12}>
             <Form.Item
