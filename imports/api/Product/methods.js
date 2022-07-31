@@ -11,7 +11,8 @@ Meteor.methods({
     },
     'product.list'({...values}) {
         return ProductCollection.find({
-            product_category:values.product_category
+            product_category:values.product_category,
+            status:'active'
         }).fetch()
     },
 })

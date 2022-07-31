@@ -12,7 +12,8 @@ Meteor.methods({
     },
     'productattr.list'({...values}) {
         return ProductAttrCollection.find({
-            product:values.product
+            product:values.product,
+            status:'active'
         }).fetch()
     },
 })

@@ -16,6 +16,7 @@ import MainLayout from '../layouts/MainLayout';
 import Userform from '../pages/userFrom';
 import ClientDetails from '../pages/ClientDetails';
 import ClientdataList from '../pages/ClientDetails/list';
+import ProductUpload from '../pages/ProductUpload/upload';
 
 const Routers = () => {
 
@@ -39,9 +40,13 @@ const Routers = () => {
                 :
                 <Routes>
                     <Route path="/" element={<MainLayout />} >                    
-                        <Route path="/auth/client" element={<ClientDetails />}>
+                        <Route path="/auth/order" element={<ClientDetails />}>
                             <Route path="list" element={<ClientdataList />} />
                         </Route>
+                        <Route path="/auth/product" element={<ProductUpload />}>
+                            {/* <Route path="upload" element={<ClientdataList />} /> */}
+                        </Route>
+                        <Route path="/auth/*" element={<ClientdataList />}/>
                     </Route>
                     <Route path="/userform" element={<Userform />} />
                     <Route path="/*" element={<Navigate replace to="/auth/client/list" />} />

@@ -9,7 +9,7 @@ Meteor.methods({
         })
     },
     'productcat.list'() {
-        return ProductCatCollection.find({}).fetch()
+        return ProductCatCollection.find({status:'active'}).fetch()
     },
     'productcat.test'(values) {
         console.log(values)

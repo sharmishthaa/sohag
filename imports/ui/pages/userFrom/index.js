@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Meteor } from 'meteor/meteor';
 import { useNavigate } from 'react-router-dom';
-import * as XLSX from "xlsx";
 import 'antd/dist/antd.css';
 import moment from "moment";
 import { UploadOutlined } from '@ant-design/icons';
@@ -20,7 +19,6 @@ function Userform() {
   const [otherMode, setOtherMode] = useState('')
   const [totalPayment, setTotalPayment] = useState('')
   const [formCustomized, setFormCustomized] = useState('')
-  const [massData, setMassData] = useState('')
 
   const layout = {
     labelCol: {
@@ -156,85 +154,8 @@ function Userform() {
       window.location.reload()
     }, "1000")
   }
-
-
-  const uploadExcelForProduct = async (e) => {
-    if (e.target.files.length === 0) return;
-
-    if (e.target.files) {
-      console.log(e.target.files)
-
-      let fileParts = e.target.files[0].name.split('.')
-      let fileSize = e.target.files[0].size;
-      let fileName = fileParts[0];
-      let fileType = fileParts[1];
-      // productcat.test
-
-      let f = e.target.files[0];
-      let name = f.name;
-      const reader = new FileReader();
-      reader.onload = (evt) => {
-
-        const bstr = evt.target.result;
-        const wb = XLSX.read(bstr, { type: "binary" });
-        const wsname = wb.SheetNames[0];
-        const ws = wb.Sheets[wsname];
-
-        const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
-        console.log("Data>>>" + data);// shows that excel data is read
-        let lines = data.split("\n");
-        let result = [];
-        let headers = lines[0].split(",");
-        for (let i = 1; i < lines.length; i++) {
-          let obj = {};
-          let currentline = lines[i].split(",");
-          for (let j = 0; j < headers.length; j++) {
-            obj[headers[j]] = currentline[j];
-          }
-          result.push(obj);
-        }
-
-        console.log(JSON.stringify(result))
-        let JSONFulldataFromExcel = JSON.parse(JSON.stringify(result))
-        console.log(JSONFulldataFromExcel.length)
-        let roleNames
-        let roles
-        let massUploadData = []
-
-        JSONFulldataFromExcel && JSONFulldataFromExcel.length > 0 && JSONFulldataFromExcel.map((data, index) => {
-          if (data['Product Category Name']) {
-
-            let collectedData = {
-              'productCategoryName': data['Product Category Name'] ? data['Product Category Name'] : '',
-              'status': data['Status'] ? data['Status'] : '',
-            }
-            massUploadData.push(collectedData)
-            console.log(massUploadData)
-
-            setMassData(massUploadData)
-            // setFile(e.target.files[0])
-          } else {
-          }
-
-        })
-      };
-      reader.readAsBinaryString(f);
-    }
-  }
-  const upLoadExcelDataForProductDetails = () => {
-    Meteor.call("productcat.test",massData, (error, result) => {
-      console.log(error);
-      if (!error) {
-        console.log("success");
-        console.log(result)
-        alert("upload Successfully")
-      }
-      else {
-        console.log(error)
-      }
-    });
-  }
-  console.log("mass-------", massData)
+  
+  // console.log("mass-------", massData)
   const downloadFile = ({ data, fileName, fileType }) => {
     const blob = new Blob([data], { type: fileType });
 
@@ -301,11 +222,9 @@ function Userform() {
         {...layout}
         onFinish={onFinish} >
         <Row className='module-heading'>
-          <input id="file-upload" accept=".xlsx,.xls,.csv" type="file" name="file-upload" onChange={(e) => uploadExcelForProduct(e, '')} />
           {/* <Upload >
             <Button onClick={(e)=> uploadExcelForProduct(e)} icon={<UploadOutlined />}>Click to Upload</Button>
           </Upload> */}
-          <Button type="primary" onClick={upLoadExcelDataForProductDetails}>Submit</Button>
           <Col className='title-cus' span={24}>  <Title level={5}>Full Name</Title></Col>
           <Col className='custom-width' span={12}>
             <Form.Item
@@ -539,8 +458,7 @@ function Userform() {
                       >
                         <Input style={{ width: 100 }} disabled />
                       </Form.Item>
-
-                      <MinusCircleOutlined onClick={() => { removeFormFields(index); remove(field.name) }} />
+                        {form.getFieldValue('products').length>1 && <MinusCircleOutlined onClick={() => { removeFormFields(index); remove(field.name) }} />}
                     </Space>
                   ))}
 
@@ -554,6 +472,7 @@ function Userform() {
           {/* {getTotalAmount() && getTotalAmount() > 0 && */}
             <>
               <Col className='title-cus' span={12}>  <Title level={5}>Amount: {getTotalAmount()}</Title></Col>
+              <Col className='title-cus' span={12}>  <Title level={5}>Payment Mode</Title></Col>
               <Col className='custom-width' span={12}>
                 <Form.Item
                   name="total_payment"
@@ -569,7 +488,6 @@ function Userform() {
               </Col>
             </>
           {/* } */}
-          <Col className='title-cus' span={24}>  <Title level={5}>Payment Mode</Title></Col>
           <Col className='custom-width' span={12}>
             <Form.Item
                 name="payment_mode"
