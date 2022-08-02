@@ -71,7 +71,7 @@ function ProductUpload() {
               'productCategoryName': data['Product Category Name'] ? data['Product Category Name'] : '',
               'productName': data['Product Name'] ? data['Product Name'] : '',
               'productSize': data['Size'] ? data['Size'] : '',
-              'productPrice': data['Price'] ? data['Price'] : '',
+              'productPrice': data['Price'] ? data['Price'] : '200',
             }
             massUploadData.push(collectedData)
             console.log(massUploadData)

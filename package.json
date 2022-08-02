@@ -13,6 +13,7 @@
     "@styled-icons/fa-solid": "^10.34.0",
     "antd": "^4.22.2",
     "bcrypt": "^5.0.1",
+    "date-fns": "^2.29.1",
     "meteor-node-stubs": "^1.2.1",
     "moment": "^2.29.4",
     "node-excel-export": "^1.4.4",

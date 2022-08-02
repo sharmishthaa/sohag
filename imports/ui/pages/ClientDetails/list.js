@@ -73,11 +73,11 @@ function ClientdataList() {
   ];
 
   const handelEdit = (key) => {
-    navigate(`/cartype/editform/${key}`)
+    navigate(`/auth/gs/editform/${key}`)
   }
 
   const handelView = (key) => {
-    navigate(`/cartype/view/${key}`)
+    navigate(`/auth/gs/view/${key}`)
   }
 
   const getListData = () => {
@@ -109,16 +109,30 @@ function ClientdataList() {
         console.log("success");
         console.log(result)
         // setProductCategory(result)
-        let headers = ["First Name, Last Name, Phone, Address Line 1, Address Line 2, City, State, Postal Code, Order Type, Total Payment, Payment Mode, Order Date Time, Order No, Product Category, Product Name, Size, Quantity, Price "];
-
-        let orderCsv = result.reduce((acc, order) => {
-          const { first_name, last_name, phone, address_line_1, address_line_2, city, state, postal_code, order_type, totalPayment, payment_mode, order_date_time, order_no, product_cat, product_name, size, quantity, price } = order;
-          acc.push([first_name, last_name, phone, address_line_1, address_line_2, city, state, postal_code, order_type, totalPayment, payment_mode, moment(order_date_time).format('DD-MM-YYYY HH:mm:ss'), order_no, product_cat, product_name, size, quantity, price].join(","));
-          return acc;
-        }, []);
+        //let headers = ["First Name, Last Name, Phone, Address Line 1, Address Line 2, City, State, Postal Code, Order Type, Total Payment, Payment Mode, Order Date Time, Order No, Product Description "];
+        let headers = ["Fisrt Name","Details"]
+        let list = []
+        
+        result.map((order, index) => {
+          let { _id, name, last_name, phone, address_line_1, address_line_2, city, state, postal_code, order_type, totalPayment, payment_mode, order_date_time, order_no, product_cat, product_name, size, quantity, price } = order;
+          let product_details = product_cat+'--'+product_name+'--'+size+'--'+quantity
+          console.log(index,"----In Map----",product_details, name)
+          //list.push([first_name, last_name, phone, address_line_1, address_line_2, city, state, postal_code, order_type, totalPayment, payment_mode, moment(order_date_time).format('DD-MM-YYYY HH:mm:ss'), order_no, product_cat, product_name, size, quantity, price].join(","));
+          if(index === 0){
+           
+          list.push( name, product_details)
+          }else if( _id === result[index-1]._id){
+            console.log("List else",list[list.length-1])
+          }else{
+            list.push(name, product_details)
+          }
+          console.log("List---Map-",list)
+          //return acc;
+          
+        });
 
         downloadFile({
-          data: [...headers, ...orderCsv].join("\n"),
+          data: [...headers, ...list].join("\n"),
           fileName: filenmae,
           fileType: "text/csv",
         });

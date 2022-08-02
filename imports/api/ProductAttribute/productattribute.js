@@ -17,7 +17,7 @@ Schemas.Product_attr = new SimpleSchema({
     optional: false,
   },
   price: {
-    type: String,
+    type: Number,
     label: 'price',
     optional: false,
   },

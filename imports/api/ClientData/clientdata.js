@@ -6,34 +6,19 @@ export const ClientDataCollection = new Mongo.Collection('orderdata');
 const Schemas = {};
 
 Schemas.Clientdata = new SimpleSchema({
-  first_name: {
+  name: {
     type: String,
     label: 'First Name',
     optional: false,
   },
-  last_name: {
-    type: String,
-    label: 'Last Name',
+  dob: {
+    type: Date,
+    label: 'Date of Birth',
     optional: false,
   },
-  address_line_1: {
+  address: {
     type: String,
-    label: 'Address Line 1',
-    optional: false,
-  },
-  address_line_2: {
-    type: String,
-    label: 'Address Line 2',
-    optional: true,
-  },
-  city: {
-    type: String,
-    label: 'City',
-    optional: false,
-  },
-  state: {
-    type: String,
-    label: 'State',
+    label: 'Address',
     optional: false,
   },
   postal_code: {
@@ -49,11 +34,6 @@ Schemas.Clientdata = new SimpleSchema({
   order_type: {
     type: String,
     label: 'Order Type',
-    optional: false,
-  },
-  total_payment: {
-    type: String,
-    label: 'Total Payment',
     optional: false,
   },
   product: {
@@ -80,11 +60,11 @@ Schemas.Clientdata = new SimpleSchema({
     label: 'Order No',
     optional: false,
   },
-  // gender: {
-  //   type: String,
-  //   label: 'Gender',
-  //   optional: false,
-  // },
+  total_payment_amount: {
+    type: Number,
+    label: 'Total Payment Amount',
+    optional: false,
+  },
   // dob: {
   //   type: Date,
   //   label: 'DOB',

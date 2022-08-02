@@ -1,11 +1,10 @@
-import { Typography, Button, Col, Form, Input, Row, InputNumber, Card, Select, Upload, Radio, Space, message } from 'antd'
+import { Typography, Button, Col, Form, Input, Row, InputNumber, Card, Select, Upload, Radio, Space, message, DatePicker } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Meteor } from 'meteor/meteor';
 import { useNavigate } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import moment from "moment";
-import { UploadOutlined } from '@ant-design/icons';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -35,13 +34,7 @@ function Userform() {
 
   console.log("Total------", totalPayment)
   console.log("Form Check---", formCustomized)
-  const getTotalAmount = () => {
-    if (formCustomized?.length > 0) {
-      return formCustomized?.reduce((accumulator, object) => {
-        return accumulator + parseInt(object.price);
-      }, 0)
-    }
-  }
+
   const removeFormFields = (idx) => {
     let list = [...formCustomized]
     list.splice(idx, 1)
@@ -53,30 +46,12 @@ function Userform() {
     document.getElementById("add_button").click();
   }, []);
   const getProductCategory = () => {
-    // const lo_cardata = { ...values }
-    // lo_cardata.dob = moment(values.dob).toDate()
     Meteor.call("productcat.list", (error, result) => {
       console.log(error);
       if (!error) {
         console.log("success");
         console.log(result)
         setProductCategory(result)
-
-        //Set Form Values
-        // const fields = form.getFieldsValue()
-        // const { products } = fields
-
-        // console.log(fields, products)
-        // products = [{productCategory: '', productName: ''}]
-        // Object.assign(products[0], { productCategory: '' })
-        // Object.assign(products[0], { productName: '' })
-        // Object.assign(products[0], { actualPrice: 0 })
-        // Object.assign(products[0], { price: 0 })
-        // Object.assign(products[0], { size: '' })
-        // Object.assign(products[0], { quantity: '' })
-
-
-        // form.setFieldsValue({ products })
       }
       else {
         console.log(error)
@@ -84,6 +59,8 @@ function Userform() {
     });
   }
   const selectedCategory = (value, key) => {
+    if(value == "10 ml perfume")
+    {}
     console.log(key)
     Meteor.call("product.list", { product_category: value }, (error, result) => {
       console.log(error);
@@ -137,7 +114,7 @@ function Userform() {
   }
 
   const onFinish = (values) => {
-    // console.log(values)
+    console.log(values)
     const lo_orderdata = { ...values }
     lo_orderdata.dob = moment(values.dob).toDate()
     Meteor.call("orderdata.insert", lo_orderdata, (error, result) => {
@@ -154,126 +131,35 @@ function Userform() {
       window.location.reload()
     }, "1000")
   }
-  
-  // console.log("mass-------", massData)
-  const downloadFile = ({ data, fileName, fileType }) => {
-    const blob = new Blob([data], { type: fileType });
 
-    const a = document.createElement("a");
-    a.download = fileName;
-    a.href = window.URL.createObjectURL(blob);
-    const clickEvt = new MouseEvent("click", {
-      view: window,
-      bubbles: true,
-      cancelable: true,
-    });
-    a.dispatchEvent(clickEvt);
-    a.remove();
-  };
-  const exportToCsv = e => {
-    e.preventDefault();
-    // let headers = ["Id,Name,Surname,Age"];
-
-    // let usersCsv = usersData.users.reduce((acc, user) => {
-    //   const { id, name, surname, age } = user;
-    //   acc.push([id, name, surname, age].join(","));
-    //   return acc;
-    // }, []);
-
-    Meteor.call("productcat.list", (error, result) => {
-      console.log(error);
-      if (!error) {
-        console.log("success");
-        console.log(result)
-        // setProductCategory(result)
-        let headers = ["Product Category Name,Status"];
-
-        let usersCsv = result.reduce((acc, user) => {
-          const { product_category_name, status } = user;
-          acc.push([product_category_name, status].join(","));
-          return acc;
-        }, []);
-
-        downloadFile({
-          data: [...headers, ...usersCsv].join("\n"),
-          fileName: "users.csv",
-          fileType: "text/csv",
-        });
-
-      }
-      else {
-        console.log(error)
-      }
-    });
-
-
-  };
-  // const addCustomized = (e, f) => {
-  //   console.log(e, f)
-  // }
-  // console.log("Form is---", form, form?.getFieldValue('products'))
   return (
     <Card level={2} title="Customer Form">
-      {/* <button type="button" onClick={exportToCsv}>
-        Export to CSV
-      </button> */}
       <Form
         form={form}
         {...layout}
         onFinish={onFinish} >
         <Row className='module-heading'>
-          {/* <Upload >
-            <Button onClick={(e)=> uploadExcelForProduct(e)} icon={<UploadOutlined />}>Click to Upload</Button>
-          </Upload> */}
-          <Col className='title-cus' span={24}>  <Title level={5}>Full Name</Title></Col>
           <Col className='custom-width' span={12}>
             <Form.Item
-              name="first_name"
-              rules={[{ required: true, message: 'First Name Required!' }]}
+              name="name"
+              label="Name"
+              rules={[{ required: true, message: 'Name Required!' }]}
             >
-              <Input className='form-input' placeholder='First Name' />
+              <Input className='form-input' placeholder='Name' />
             </Form.Item>
           </Col>
           <Col className='custom-width' span={12}>
             <Form.Item
-              name="last_name"
-              rules={[{ required: true, message: 'Last Name Required!' }]}
+              name="dob"
+              label="Date of Birth"
             >
-              <Input className='form-input' placeholder='Last Name' />
+              <DatePicker placeholder="00-00-0000" />
             </Form.Item>
           </Col>
-          {/* <Col className='title-cus' span={12}>  <Title level={5}>Gender</Title></Col>
-          <Col className='title-cus' span={12}>  <Title level={5}>Date of Birth</Title></Col>
           <Col className='custom-width' span={12}>
             <Form.Item
-              name="gender"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Radio.Group>
-                <Radio value="male">Male</Radio>
-                <Radio value="female">Female</Radio>
-                <Radio value="others">Others</Radio>
-              </Radio.Group>
-            </Form.Item>
-          </Col>
-          <Form.Item
-            name="dob"
-            rules={[
-              {
-                required: true,
-              },
-            ]}
-          >
-            <DatePicker style={{ width: '500%' }} placeholder="00-00-0000" />
-          </Form.Item> */}
-          <Col className='title-cus' span={24}>  <Title level={5}>Address</Title></Col>
-          <Col className='custom-width' span={12}>
-            <Form.Item
-              name="address_line_1"
+              name="address"
+              label="Address"
               rules={[{ required: true, message: 'Address Line 1 Required!' }]}
             >
               <Input className='form-input' placeholder='Address Line 1' />
@@ -281,41 +167,26 @@ function Userform() {
           </Col>
           <Col className='custom-width' span={12}>
             <Form.Item
-              name="address_line_2"
+              name="landmark"
+              label="Landmark"
             >
-              <Input className='form-input' placeholder='Address Line 2' />
-            </Form.Item>
-          </Col>
-          <Col className='custom-width' span={12}>
-            <Form.Item
-              name="city"
-              rules={[{ required: true, message: 'City Required!' }]}
-            >
-              <Input className='form-input' placeholder='City' />
-            </Form.Item>
-          </Col>
-          <Col className='custom-width' span={12}>
-            <Form.Item
-              name="state"
-              rules={[{ required: true, message: 'State Required!' }]}
-            >
-              <Input className='form-input' placeholder='State' />
+              <Input className='form-input' placeholder='Landmark' />
             </Form.Item>
           </Col>
           <Col className='custom-width' span={12}>
             <Form.Item
               name="postal_code"
+              label="Postal/Zip Code"
               rules={[{ required: true, type: "number", min: 100000, max: 999999, message: '6 digits Postal/Zip Code Required!' }]}
             >
               <InputNumber style={{ width: '101%' }} placeholder='Postal/Zip Code' />
             </Form.Item>
           </Col>
           <Col className='title-cus' span={12}> </Col>
-          <Col className='title-cus' span={12}>  <Title level={5}>Phone No</Title></Col>
-          <Col className='title-cus' span={12}>  <Title level={5}>Order Type</Title></Col>
           <Col className='custom-width' span={12}>
             <Form.Item
               name="phone"
+              label="Phone Number"
               rules={[{ required: true, type: "number", min: 1000000000, max: 9999999999, message: '10 digits Phone No Required!' }]}
             >
               <InputNumber style={{ width: '101%' }} placeholder="XXXXXXXXXX" />
@@ -324,6 +195,7 @@ function Userform() {
           <Col className='custom-width' span={12}>
             <Form.Item
               name="order_type"
+              label="Order Type"
               rules={[{ required: true, message: 'Order Type Required!' }]}
             >
               <Radio.Group>
@@ -334,7 +206,7 @@ function Userform() {
           </Col>
           <Col className='title-cus' span={24}>  <Title level={5}>Products</Title></Col>
           <Col className='custom-width' span={24} >
-            <Form.List name="products">
+            <Form.List name="products" label="Products">
               {(fields, { add, remove }) => (
                 <>
                   {fields.map((field, index) => (
@@ -352,11 +224,11 @@ function Userform() {
                           },
                         ]}
                       >
-                        <Select style={{ width: 100 }} key={"select-" + field.key} onChange={(e) => selectedCategory(e, index)}>
-                          {/* <Option value="">Select...</Option> */}
+                        <Select key={"select-" + field.key} onChange={(e) => selectedCategory(e, index)}>
                           {productCategory?.length > 0 && productCategory.map((data, index) => (
                             <Option key={index} value={data._id}>{data.product_category_name}</Option>
                           ))}
+                          <Option key={"10mlperfume"} value={"10 ml perfume"}>10 ml Perfume</Option>
                         </Select>
                       </Form.Item>
 
@@ -366,8 +238,6 @@ function Userform() {
                         {...field}
                         ey={"name-" + field.key}
                         label="Product Name"
-
-                        // disabled={form?.getFieldValue('products')[field.key] && !form?.getFieldValue('products')[field.key].productCategory  ? false : true}
                         name={[field.name, 'productName']}
                         rules={[
                           {
@@ -377,8 +247,7 @@ function Userform() {
                         ]}
                       >
                         <Select
-                          disabled={form.getFieldValue('products')[index]?.productCategory ? false : true}
-                          style={{ width: 100 }} key={"prod name-" + field.key} onChange={(e) => selectedProduct(e, index)} >
+                          disabled={form.getFieldValue('products')[index]?.productCategory ? false : true} key={"prod name-" + field.key} onChange={(e) => selectedProduct(e, index)} >
                           {productNameFromCategory?.length > 0 && productNameFromCategory.map((data, index) => (
                             <Option key={index} value={data._id}>{data.product_name}</Option>
                           ))}
@@ -389,7 +258,6 @@ function Userform() {
                       <Form.Item
                         {...field}
                         key={"size-" + field.key}
-                        // disabled={form.getFieldValue('products')[field.key]?.productName ? false : true}
                         label="Size"
                         name={[field.name, 'size']}
                         rules={[
@@ -400,8 +268,7 @@ function Userform() {
                         ]}
                       >
                         <Select
-                          disabled={form.getFieldValue('products')[index]?.productName ? false : true}
-                          style={{ width: 100 }} id={"size-select-" + field.key} key={"size select-" + index}
+                          disabled={form.getFieldValue('products')[index]?.productName ? false : true} id={"size-select-" + field.key} key={"size select-" + index}
                           onChange={(e) => {
                             let price = productDetailsFromProduct.find((data) => data._id === e).price
 
@@ -416,6 +283,7 @@ function Userform() {
                           {productDetailsFromProduct?.length > 0 && productDetailsFromProduct.map((data, index) => (
                             <Option key={index} value={data._id}>{data.size}</Option>
                           ))}
+                          {/* <Option key={0} value={10}>10 ml</Option> */}
                         </Select>
                       </Form.Item>
 
@@ -433,10 +301,7 @@ function Userform() {
                         ]}
                       >
                         <InputNumber
-                          disabled={form.getFieldValue('products')[index]?.size ? false : true}
-                          style={{ width: 100 }} min="1" onChange={(e) => {
-                            // console.log(form.getFieldValue('products')[field.key])
-                            // console.log(parseFloat(form.getFieldValue('products')[field.key].actualPrice), e)
+                          disabled={form.getFieldValue('products')[index]?.size ? false : true} min="1" onChange={(e) => {
                             const fields = form.getFieldsValue()
                             const { products } = fields
                             Object.assign(products[index], { price: parseFloat(form.getFieldValue('products')[index].actualPrice) * parseInt(e) })
@@ -444,20 +309,20 @@ function Userform() {
                             setFormCustomized(products)
                           }} />
                       </Form.Item>
-                      <Form.Item
+                      {/* <Form.Item
                         {...field}
-                        key={"price-" + field.key}
-                        label="Price"
-                        name={[field.name, 'price']}
+                        key={"note-" + field.key}
+                        label="Product Detals"
+                        name={[field.name, 'note']}
                         rules={[
                           {
                             required: true,
-                            message: 'Missing Price',
+                            message: 'Missing Details',
                           },
                         ]}
                       >
-                        <Input style={{ width: 100 }} disabled />
-                      </Form.Item>
+                        <Input className='form-input' placeholder='Product Details' />
+                      </Form.Item> */}
                         {form.getFieldValue('products').length>1 && <MinusCircleOutlined onClick={() => { removeFormFields(index); remove(field.name) }} />}
                     </Space>
                   ))}
@@ -469,28 +334,21 @@ function Userform() {
               )}
             </Form.List>
           </Col>
-          {/* {getTotalAmount() && getTotalAmount() > 0 && */}
-            <>
-              <Col className='title-cus' span={12}>  <Title level={5}>Amount: {getTotalAmount()}</Title></Col>
-              <Col className='title-cus' span={12}>  <Title level={5}>Payment Mode</Title></Col>
-              <Col className='custom-width' span={12}>
-                <Form.Item
-                  name="total_payment"
-                  rules={[
-                    {
-                      required: false, type: 'total_payment'
-                    },
-                  ]}
-                >
-                  <Input readOnly className='form-input' id="pay" name="pay" defaultValue={getTotalAmount()} value={getTotalAmount()} />
-                  <input type="hidden"  value={getTotalAmount()} />
-                </Form.Item>
-              </Col>
-            </>
-          {/* } */}
+              
           <Col className='custom-width' span={12}>
             <Form.Item
+                name="total_payment_amount"
+                label="Total Payment Amount"
+                rules={[{ required: true, message: 'Payment Amount Required!' }]}
+              >
+                <Input className='form-input' placeholder='Total Payment Amount' />
+            </Form.Item>
+          </Col>
+
+          <Col className='custom-width' span={24}>
+            <Form.Item
                 name="payment_mode"
+                label="Payment Mode"
                 rules={[{ required: true, message: 'Payment Mode Required!' }]}
               >
                 <Radio.Group>

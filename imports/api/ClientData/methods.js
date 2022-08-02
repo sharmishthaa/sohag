@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { ClientDataCollection } from './clientdata';
+import getWeekOfMonth from 'date-fns/getWeekOfMonth'
 
 Meteor.methods({
     'orderdata.insert'({...values}) {
@@ -9,16 +10,13 @@ Meteor.methods({
             order_price += product_price.price
         })
         return ClientDataCollection.insert({
-            first_name:values.first_name, 
-            last_name:values.last_name, 
-            address_line_1:values.address_line_1,
-            address_line_2:values.address_line_2,
-            city:values.city,
-            state:values.state,
+            name:values.name, 
+            dob:values.dob, 
+            address:values.address,
             postal_code:values.postal_code,
             phone:values.phone,
             order_type:values.order_type,
-            total_payment:values.total_payment,
+            total_payment_amount:values.total_payment_amount,
             product:values.products,
             payment_mode:values.payment_mode,
             order_date_time:new Date(),
@@ -73,34 +71,34 @@ Meteor.methods({
                 },
                 { $unwind: "$product_categorys" },
                 { $match: match_feilds },
-                
+                { $sort: {_id:-1} },
                 {
                     $project: {
-                        "first_name": 1,
-                        "last_name": 1,
+                        "name": 1,
                         "phone": 1,
-                        "address_line_1": 1,
-                        "address_line_2": 1,
-                        "city": 1,
-                        "state": 1,
+                        "address": 1,
                         "postal_code": 1,
                         "order_type": 1,
-                        "totalPayment": 1,
+                        "total_payment_amount": 1,
                         "payment_mode": 1,
                         "order_date_time": 1,
                         "order_no": 1,
                         "product_cat": "$product_categorys.product_category_name",
                         "product_name": "$products.product_name",
                         "size": "$product_attrs.size",
-                        "quantity": "$product.quantity",
-                        "price": "$product.price",
+                        "quantity": "$product.quantity"
                     }
                 }
             ]
         ).toArray().await();
         return client_data
     },
-    'orderdata.list'({...values}) {
+
+    'orderdata.list'() {
+        // let weekOfMonth = getWeekOfMonth(new Date())
+        // let dayOfWeek = new Date('07-03-2022').getDay()
+        // // '07-03-2022'
+        // console.log(dayOfWeek);
         return ClientDataCollection.find().fetch()
     },
 })

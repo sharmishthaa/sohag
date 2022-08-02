@@ -17,6 +17,10 @@ import Userform from '../pages/userFrom';
 import ClientDetails from '../pages/ClientDetails';
 import ClientdataList from '../pages/ClientDetails/list';
 import ProductUpload from '../pages/ProductUpload/upload';
+import GS from '../pages/GlobalSettings';
+import GSList from '../pages/GlobalSettings/list';
+import GSForm from '../pages/GlobalSettings/form';
+import GSView from '../pages/GlobalSettings/view';
 
 const Routers = () => {
 
@@ -46,10 +50,16 @@ const Routers = () => {
                         <Route path="/auth/product" element={<ProductUpload />}>
                             {/* <Route path="upload" element={<ClientdataList />} /> */}
                         </Route>
-                        <Route path="/auth/*" element={<ClientdataList />}/>
+                        <Route path="/auth/gs" element={<GS />}>
+                            <Route path="list" element={<GSList />} />
+                            <Route path="form" element={<GSForm />} />
+                            <Route path="editform/:gsid" element={<GSForm />} />
+                            <Route path="view/:gsid" element={<GSView />} />
+                        </Route>
+                        {/* <Route path="/auth/*" element={<ClientdataList />}/> */}
                     </Route>
                     <Route path="/userform" element={<Userform />} />
-                    <Route path="/*" element={<Navigate replace to="/auth/client/list" />} />
+                    {/* <Route path="/*" element={<Navigate replace to="/auth/client/list" />} /> */}
                 </Routes>
             }
         </BrowserRouter>

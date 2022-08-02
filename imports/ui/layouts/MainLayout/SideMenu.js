@@ -41,6 +41,7 @@ const SideMenu = ({collapsed}) => {
       const items = [
         getItem(<Link to="/auth/order/list">Order Details</Link>, '1', <CarOutlined />),
         getItem(<Link to="/auth/product">Product Upload</Link>, '2', <CarOutlined />),
+        getItem(<Link to="/auth/gs/list">Global Settings</Link>, '3', <CarOutlined />),
         ];
  
     return (
