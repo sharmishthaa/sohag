@@ -8,18 +8,23 @@ const Schemas = {};
 Schemas.Clientdata = new SimpleSchema({
   name: {
     type: String,
-    label: 'First Name',
+    label: 'Name',
     optional: false,
   },
   dob: {
     type: Date,
     label: 'Date of Birth',
-    optional: false,
+    optional: true,
   },
   address: {
     type: String,
     label: 'Address',
     optional: false,
+  },
+  landmark: {
+    type: String,
+    label: 'Landmark',
+    optional: true,
   },
   postal_code: {
     type: String,
@@ -42,6 +47,8 @@ Schemas.Clientdata = new SimpleSchema({
     optional: false,
   },
   'product.$': Object,
+  "product.$.productCategory": String,
+  "product.$.productName": String,
   "product.$.size": String,
   "product.$.quantity": String,
   "product.$.price": String,

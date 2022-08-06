@@ -1,5 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Items_per_page } from '../../config';
+// import { fileUpload } from '../Utility/fileUpload';
+// import { gsValueByField } from '../Utility/methods';
 import { GlobalSettingsCollection } from './globalsettings';
  
 Meteor.methods({
@@ -14,15 +16,14 @@ Meteor.methods({
   },
 
   'gs.valuebyfield'(field_name) {
-    const lo_field_value = GlobalSettingsCollection.findOne({field_name:field_name},{fields:{field_value:1}})
-    return lo_field_value.field_value
+    return gsValueByField(field_name)
   },
 
   'gs.list'(pageNo, sortedInfo, searchText){
     const limit = Items_per_page
     const skip = (pageNo - 1) * limit
     let sortConditions = {}
-    if(sortedInfo.column !== undefined)
+    if(sortedInfo?.column !== undefined)
     {
       const sortValue = sortedInfo.order=='ascend'?1:-1
       sortConditions[sortedInfo.columnKey]=sortValue
@@ -73,5 +74,12 @@ Meteor.methods({
         option_value:values.option_value, 
         status:values.status}})
   },
+
+  // 'gs.uploadToTempFolder': async (data) => {
+  //   if (data) {
+  //     let success = await fileUpload(data, "global-settings/temp");
+  //     return success.filename;
+  //   }
+  // },
 
 });

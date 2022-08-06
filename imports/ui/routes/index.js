@@ -48,7 +48,7 @@ const Routers = () => {
                             <Route path="list" element={<ClientdataList />} />
                         </Route>
                         <Route path="/auth/product" element={<ProductUpload />}>
-                            {/* <Route path="upload" element={<ClientdataList />} /> */}
+                            <Route path="upload" element={<ClientdataList />} />
                         </Route>
                         <Route path="/auth/gs" element={<GS />}>
                             <Route path="list" element={<GSList />} />
@@ -56,10 +56,10 @@ const Routers = () => {
                             <Route path="editform/:gsid" element={<GSForm />} />
                             <Route path="view/:gsid" element={<GSView />} />
                         </Route>
-                        {/* <Route path="/auth/*" element={<ClientdataList />}/> */}
+                        <Route path="/auth/*" element={<ClientdataList />}/>
                     </Route>
                     <Route path="/userform" element={<Userform />} />
-                    {/* <Route path="/*" element={<Navigate replace to="/auth/client/list" />} /> */}
+                    <Route path="/*" element={<Navigate replace to="/auth/client/list" />} />
                 </Routes>
             }
         </BrowserRouter>

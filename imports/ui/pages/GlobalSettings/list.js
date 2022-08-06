@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { Meteor } from 'meteor/meteor';
 import 'antd/dist/antd.css';
 import './style.less';
-import { Input, Table, Image, Row, Col, Button } from 'antd';
+import { Input, Table, Image, Button } from 'antd';
 import { EditOutlined } from "@ant-design/icons";
-import { useNavigate } from 'react-router-dom';
-import { application } from '../../../api/config/application';
+import {useNavigate } from 'react-router-dom';
+import { application } from '../../../api/config/application'; 
 
 const { Search } = Input;
 const BaseUrl = application.s3MediaBaseUrl;
@@ -20,16 +20,23 @@ function GSList() {
       sortOrder: sortedInfo.columnKey === 'display_name' ? sortedInfo.order : null,
     },
     {
-      title: 'Field Value',
-      dataIndex: 'field_value',
-      key: 'field_value',
-      render: (text, record) => record.input_type == 'file' ? <Image width={200} src={`${BaseUrl}${record.field_value}`} /> : <>{record.field_value}</>,
-      sorter: (a, b) => a.field_value.length - b.field_value.length,
-      sortOrder: sortedInfo.columnKey === 'field_value' ? sortedInfo.order : null,
+        title: 'Field Value',
+        dataIndex: 'field_value',
+        key: 'field_value',
+        render: (text, record) => record.input_type=='file' ? <Image width={200} src={`${record.field_value}`} /> : <>{record.field_value}</>,
+        sorter: (a, b) => a.field_value.length - b.field_value.length,
+        sortOrder: sortedInfo.columnKey === 'field_value' ? sortedInfo.order : null,
     },
+    // {
+    //     title: 'Status',
+    //     dataIndex: 'status',
+    //     key: 'status',
+    //     sorter: (a, b) => a.status.length - b.status.length,
+    //     sortOrder: sortedInfo.columnKey === 'status' ? sortedInfo.order : null,
+    // },
     {
       key: 'action',
-      render: (text, record) => <a onClick={() => handelEdit(record._id)}><EditOutlined /></a>,
+      render: (text, record) => <a onClick={()=>handelEdit(record._id)}><EditOutlined /></a>,
     },
   ];
 
@@ -43,7 +50,7 @@ function GSList() {
 
   let navigate = useNavigate();
 
-  const handleSearch = (value) => {
+  const handleSearch = (value) =>{
     setSearchText(value);
   };
 
@@ -62,16 +69,18 @@ function GSList() {
       setGsList(res);
       setLoadingStatus(false);
     });
-
+    
   }
 
   const getTotalRecord = () => {
     Meteor.call("gs.count", searchText, (err, res) => {
       setTotalRecord(res);
-      if (res > pageSize) {
+      if(res > pageSize)
+      {
         setIsPagination(true)
       }
-      else {
+      else
+      {
         setIsPagination(false)
       }
     });
@@ -80,35 +89,27 @@ function GSList() {
   const handleChange = (pagination, filters, sorter) => {
     setSortedInfo(sorter);
   };
-
+  
   useEffect(() => {
     getTotalRecord()
     getListData()
-  }, [defaultPage, sortedInfo, searchText])
-
-  const openForm = () => {
-    navigate(`/auth/gs/form`)
-  }
+   }, [defaultPage, sortedInfo, searchText])
 
   return (
     <div>
-      <div>
-        <Row>
-          <Col span={2}><Button className='crud-action' onClick={() => openForm()}>Create</Button></Col>
-        </Row>
-      </div>
+      {/* <Button onClick={()=>{navigate(`/auth/gs/form`)}}>Create</Button> */}
       <div className='module-content-with-pagination'>
-        <Search placeholder="input search text" onSearch={handleSearch} enterButton className='search-div' />
+      <Search placeholder="input search text" onSearch={handleSearch} enterButton className='search-div'/>
         <Table className='table-class'
-          pagination={isPagination && {
-            defaultCurrent: defaultPage,
-            pageSize: pageSize,
-            total: totalRecord,
-            onChange: (defaultPage, pageSize) => {
-              setDefaultPage(defaultPage); setPageSize(pageSize)
+        pagination={isPagination && {
+          defaultCurrent: defaultPage,
+          pageSize: pageSize,
+          total: totalRecord,
+          onChange:(defaultPage, pageSize)=>{
+              setDefaultPage(defaultPage);setPageSize(pageSize)
             }
-          }}
-          columns={columns} dataSource={gsList} rowKey="_id" loading={loadindStatus} onChange={handleChange} />
+        }} 
+        columns={columns} dataSource={gsList} rowKey="_id" loading={loadindStatus} onChange={handleChange}/>
         {/* {isPagination && <Pagination onChange={(page)=>changeDataOfList(page)} defaultCurrent={defaultCurrent} total={totalRecord} pageSize={pageSize}/>} */}
       </div>
     </div>

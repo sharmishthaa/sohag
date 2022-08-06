@@ -21,6 +21,21 @@ Schemas.GlobalSettings = new SimpleSchema({
     label: 'Field Value',
     optional: true,
   },
+  input_type: {
+    type: String,
+    label: 'Input Type',
+    optional: true,
+  },
+  option_value: {
+    type: String,
+    label: 'Option Value',
+    optional: true,
+  },
+  status: {
+    type: String,
+    label: 'Status',
+    optional: false,
+  },
 });
 
 GlobalSettingsCollection.attachSchema(Schemas.GlobalSettings);

@@ -1,4 +1,4 @@
-import { Button, Form } from 'antd';
+import { Button, Form, Anchor } from 'antd';
 import React, { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import ModuleHeading from '../ModuleHeading'
@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 
 function ProductUpload() {
   const [form] = Form.useForm();
+  const { Link } = Anchor;
 
   const [massData, setMassData] = useState('')
   const upLoadExcelDataForProductDetails = () => {
@@ -66,12 +67,11 @@ function ProductUpload() {
 
         JSONFulldataFromExcel && JSONFulldataFromExcel.length > 0 && JSONFulldataFromExcel.map((data, index) => {
           if (data['Product Category Name']) {
-
             let collectedData = {
               'productCategoryName': data['Product Category Name'] ? data['Product Category Name'] : '',
               'productName': data['Product Name'] ? data['Product Name'] : '',
               'productSize': data['Size'] ? data['Size'] : '',
-              'productPrice': data['Price'] ? data['Price'] : '200',
+              'productPrice': data['Price'] ? data['Price'] : '',
             }
             massUploadData.push(collectedData)
             console.log(massUploadData)
@@ -86,13 +86,47 @@ function ProductUpload() {
       reader.readAsBinaryString(f);
     }
   }
+
+  const sampleCSVdownload = () =>
+  {
+    let headers = ["Product Category Name,Product Name,Size,Price"]
+    list = []
+    for(i=0; i <=5; i++)
+    {
+      list.push(["Category Name "+i,"Product Name "+i,"Size "+i,i].join(","))
+    }
+    console.log("List---Map-", list)
+    downloadFile({
+      data: [...headers, ...list].join("\n"),
+      fileName: "sample_product_uplaod.csv",
+      fileType: "text/csv",
+    });
+  }
+
+  const downloadFile = ({ data, fileName, fileType }) => {
+    const blob = new Blob([data], { type: fileType });
+
+    const a = document.createElement("a");
+    a.download = fileName;
+    a.href = window.URL.createObjectURL(blob);
+    const clickEvt = new MouseEvent("click", {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    });
+    a.dispatchEvent(clickEvt);
+    a.remove();
+  };
+
   return (
     <div>
         <ModuleHeading module='Upload Product Module'/>
-        <Form
-        form={form}>
+        <Form form={form}>
             <input id="file-upload" accept=".xlsx,.xls,.csv" type="file" name="file-upload" onChange={(e) => uploadExcelForProduct(e, '')} />
             <Button type="primary" onClick={upLoadExcelDataForProductDetails}>Submit</Button>
+            <Anchor affix={false} onClick={sampleCSVdownload}>
+              <Link href="#" title="Download Sample CSV" />
+            </Anchor>
         </Form>
         <Outlet/>
     </div>
