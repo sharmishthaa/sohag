@@ -5,31 +5,32 @@ import { orderNoEncriptionObject } from '../../config';
 
 Meteor.methods({
     'orderdata.insert'({...values}) {
-        // console.log(values)
+        console.log(values)
 
-        // const inserted_data = {
-        //     name:values.name, 
-        //     address:values.address,
-        //     landmark:values.landmark,
-        //     postal_code:values.postal_code,
-        //     phone:values.phone,
-        //     order_type:values.order_type,
-        //     total_payment_amount:values.total_payment_amount,
-        //     product:values.products,
-        //     payment_mode:values.payment_mode,
-        //     order_date_time:new Date(),
-        //     order_no:generateOrderId()
-        //     // gender:values.gender,
-        //     // dob:values.dob, 
-        //     // email:values.email, 
-        // }
-        // if(values.dob)
-        // {
-        //     inserted_data.dob=values.dob
-        //     console.log(inserted_data)
-        // }
-        // return ClientDataCollection.insert(inserted_data)
+        const inserted_data = {
+            name:values.name, 
+            address:values.address,
+            landmark:values.landmark,
+            postal_code:values.postal_code,
+            phone:values.phone,
+            order_type:values.order_type,
+            total_payment_amount:values.total_payment_amount,
+            product:values.products,
+            payment_mode:values.payment_mode,
+            order_date_time:new Date(),
+            order_no:generateOrderId()
+            // gender:values.gender,
+            // dob:values.dob, 
+            // email:values.email, 
+        }
+        if(values.dob)
+        {
+            inserted_data.dob=values.dob
+            console.log(inserted_data)
+        }
+        return ClientDataCollection.insert(inserted_data)
     },
+
     'orderdata.details'({...values}) {
         console.log(values)
         let match_feilds = {}
@@ -113,10 +114,6 @@ Meteor.methods({
     },
 
     'orderdata.list'() {
-        // let weekOfMonth = getWeekOfMonth(new Date())
-        // let dayOfWeek = new Date().getDay()
-        // // '07-03-2022'
-        // console.log(dayOfWeek);
         return ClientDataCollection.find().fetch()
     },
 })
