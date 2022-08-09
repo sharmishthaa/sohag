@@ -97,7 +97,7 @@ function GSList() {
 
   return (
     <div>
-      {/* <Button onClick={()=>{navigate(`/auth/gs/form`)}}>Create</Button> */}
+      <Button onClick={()=>{navigate(`/auth/gs/form`)}}>Create</Button>
       <div className='module-content-with-pagination'>
       <Search placeholder="input search text" onSearch={handleSearch} enterButton className='search-div'/>
         <Table className='table-class'

@@ -1,96 +1,118 @@
-body{
+body {
     margin: 0;
     padding: 0;
 }
-.user-form-main-page{
-    background-image: linear-gradient(to right top, #1a03b3, #1339cb, #215ce0, #3c7cf1, #5c9cff);
+
+.user-form-main-page {
+    /* background-image: linear-gradient(to right top, #1a03b3, #1339cb, #215ce0, #3c7cf1, #5c9cff); */
     height: 100vh;
     overflow: auto;
     display: flex;
     align-items: center;
-    padding: 55px 24px 55px 24px;
+    padding: 24px 24px;
 }
 
-.user-form-main-page .main-section{
+.user-form-main-page .main-section {
     width: 100%;
-    max-width: 30%;
+    max-width: 20%;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
 }
-.user-form-main-page .main-section .logo .ant-image{
-    width: 80px !important;
-    height: 80px !important;
+
+.user-form-main-page .main-section .logo .ant-image {
+    width: 213px !important;
+    height: 213px !important;
     border-radius: 50%;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
-.user-form-main-page .main-section .logo img{
+
+.user-form-main-page .main-section .logo img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-.user-form-main-page .main-section .right-box .text-container{
-    color: #fff;
-    font-size: 16px;
+
+.user-form-main-page .main-section .right-box .text-container {
+    color: rgb(0, 0, 0);
+    font-size: 17px;
     font-weight: 500;
     margin-top: 12px;
     line-height: 26px;
 }
-.user-form-main-page .main-section .below-text-container .text-container{
-    color: #fff;
+
+.user-form-main-page .main-section .below-text-container .text-container {
+    color: rgb(0, 0, 0);
     font-size: 14px;
     font-weight: 400;
     line-height: 24px;
     margin-top: 32px;
 }
-.user-form-main-page  .ant-form{
+
+.user-form-main-page .ant-form {
     width: 100%;
-    max-width: 70%;
+    max-width: 80%;
     background: #fff;
-    padding: 0 50px 60px 50px;
-    border-radius: 100px 0 0 100px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    max-height: calc(100vh - 100px);
+    padding: 0 0 0 60px;
 }
 
-.user-form-main-page  .ant-form .form-title{
+.user-form-main-page .ant-form .ant-row.module-heading {
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: calc(100vh - 159px);
+}
+
+.user-form-main-page .ant-form .form-title {
     font-size: 32px;
     font-weight: 500;
     text-align: center;
-    padding: 32px 0;
+    padding: 0 0 24px;
     border-bottom: 1px solid #ccc;
     margin-bottom: 24px;
+    color: #e2a93c;
 }
-.user-form-main-page  .ant-form .ant-picker{
+
+.user-form-main-page .ant-form .ant-picker {
     width: 100%;
 }
-.user-form-main-page  .ant-form .ant-form-item-row{
+
+.user-form-main-page .ant-form .ant-form-item-row {
     white-space: wrap;
     flex-wrap: wrap;
 }
-.user-form-main-page  .ant-form .ant-form-item-label{
+
+.user-form-main-page .ant-form .ant-form-item-label {
     width: 100% !important;
     max-width: 100% !important;
     flex: 0 0 100% !important;
     text-align: left;
 }
 
-.user-form-main-page  .ant-form  .ant-form-item-control{
+.user-form-main-page .ant-form .ant-form-item-control {
     max-width: 100% !important;
     flex: 0 0 100% !important;
     border-radius: 30px !important;
 }
-input[type='text'], input[type='password'], input[type='number'], textarea,.ant-picker,.ant-input-number-input,.ant-input-number,.ant-select-single .ant-select-selector{
+
+input[type='text'],
+input[type='password'],
+input[type='number'],
+textarea,
+.ant-picker,
+.ant-input-number-input,
+.ant-input-number,
+.ant-select-single .ant-select-selector {
     border-radius: 30px !important;
     height: 42px !important;
+    width: 100% !important;
 }
 
-.user-form-main-page  .ant-form .ant-form-item{
+.user-form-main-page .ant-form .ant-form-item {
     padding: 0 10px;
 }
-.user-form-main-page  .ant-form .ant-btn{
+
+.user-form-main-page .ant-form .ant-btn {
     height: 49px;
     width: 180px;
     border-radius: 50px;
@@ -98,15 +120,25 @@ input[type='text'], input[type='password'], input[type='number'], textarea,.ant-
     font-weight: 500;
     transition: .4s;
 }
-.ant-btn-primary{
-    background-image: linear-gradient(to right top, #1a03b3, #1339cb, #215ce0, #3c7cf1, #5c9cff);
+
+.user-form-main-page .ant-form .ant-row.module-heading  .ant-btn-primary {
+    background: #e2a93c;
+    border-color: #e2a93c;
+    border: 1px solid #e2a93c;
 }
-.user-form-main-page  .ant-form .ant-btn:hover{
-    box-shadow: 1px 1px 8px 0px grey;
+
+.user-form-main-page .ant-form .ant-row.module-heading .ant-btn-primary:hover {
+    background: #fff;
+    color: #e2a93c;
+    border: 1px solid #e2a93c;
+    box-shadow: none;
+    outline: none;
 }
-.full-img-loader{
+
+.full-img-loader {
     position: fixed;
-    top: 0;left: 0;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     display: flex;
@@ -115,37 +147,138 @@ input[type='text'], input[type='password'], input[type='number'], textarea,.ant-
     z-index: 999999;
     background-color: rgba(0, 0, 0, 0.24);
 }
-.full-img-loader img{
+.full-img-loader.for-responsive{
+    display: none;
+}
+.full-img-loader img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
-.full-img-loader .ant-image{
+
+.full-img-loader .ant-image {
     width: 100%;
     height: 100%;
 }
 
-.user-form-main-page  .ant-form .submit-form-actions{
+.user-form-main-page .ant-form .submit-form-actions {
     display: flex;
     justify-content: center;
 }
-.user-form-main-page  .ant-form .radio-group-update .ant-radio-wrapper span:not(.ant-radio){
+
+.user-form-main-page .ant-form .radio-group-update .ant-radio-wrapper span:not(.ant-radio) {
     display: flex;
     align-items: center;
     column-gap: 8px;
 }
-@media (max-width: 991px){
-    .user-form-main-page{
+
+@media (max-width: 991px) {
+    .user-form-main-page {
         flex-wrap: wrap;
         row-gap: 20px;
+        padding: 24px 24px 50px;
     }
-    .user-form-main-page .main-section{
+
+    .user-form-main-page .main-section {
         max-width: unset;
     }
+
     .user-form-main-page .ant-form {
         max-width: unset;
-        padding: 32px;
-        border-radius: 20px;
-        max-height: calc(100vh - 564px);
+        padding: 0;
+    
+    }
+    .user-form-main-page .ant-form .ant-row.module-heading{
+        max-height: unset !important;
+    }
+}
+
+.position-relative {
+    position: relative;
+}
+
+.user-form-main-page .ant-form .add-btn {}
+
+.user-form-main-page .ant-form .add-btn .ant-form-item {
+    margin: 0;
+}
+
+.user-form-main-page .ant-form .add-btn .ant-form-item .ant-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+}
+
+.user-form-main-page .ant-form .product-form {}
+
+.user-form-main-page .ant-form .ant-form-item.product-select-items {
+    width: 200px;
+}
+.flex-wrap{
+    flex-wrap: wrap !important;
+}
+.user-form-main-page .ant-form .ant-form-item.product-select-items .ant-select-selector {
+    display: flex;
+    align-items: center;
+}
+
+.input-type-number-box .ant-input-number-handler-wrap {
+    display: none !important;
+}
+
+.input-type-number-box .ant-input-number-input-wrap .ant-input-number-input {
+    text-align: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+}
+.input-type-number-box.left .ant-input-number-input-wrap .ant-input-number-input {
+    text-align: left !important;
+}
+@media (max-width: 767px){
+    .full-img-loader.for-desktop{
+        display: none;
+    }
+    .full-img-loader.for-responsive{
+        display: flex;
+    }
+}
+@media (max-width: 575px){
+    .ant-form-item .ant-form-item-label {
+        padding: 0 0 3px !important;
+        line-height: 18px !important;
+    }
+    .ant-form-item {
+              margin-bottom: 13px !important;
+    }
+    .ant-radio-group {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        row-gap: 8px !important;
+    }
+    .user-form-main-page .ant-form .ant-row.module-heading .ant-col-12 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .user-form-main-page {
+        row-gap: 15px;
+        padding: 20px 12px 40px;
+    }
+    .user-form-main-page .main-section .logo .ant-image {
+        width: 160px !important;
+        height: 160px !important;
+    }
+    .user-form-main-page .main-section .right-box .text-container {
+        font-size: 15px;
+        margin-top: 10px;
+        line-height: 25px;
+    }
+    .user-form-main-page .ant-form .form-title {
+        font-size: 25px;
+        padding: 0 0 14px;
+        margin-bottom: 15px;
+        color: #e2a93c
     }
 }

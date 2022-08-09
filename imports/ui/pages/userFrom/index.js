@@ -54,7 +54,7 @@ function Userform() {
     getGlobalValues()
 
     setPageAnimatedLoading(true)
-    await delay(1000);
+    await delay(5000);
 
     setPageAnimatedLoading(false)
 
@@ -137,9 +137,8 @@ function Userform() {
             let listing = productDetailsFromProduct.find((data) => data.product === value) ? true : false
             !listing &&
               setProductDetailsFromProduct([...productDetailsFromProduct, ...result])
-          } 
-          else 
-          {
+          }
+          else {
             setProductDetailsFromProduct([...productDetailsFromProduct, ...result])
           }
 
@@ -159,8 +158,7 @@ function Userform() {
         setFormCustomized(products)
 
       }
-      else 
-      {
+      else {
         console.log(error)
       }
     });
@@ -192,9 +190,14 @@ function Userform() {
       gSValues.find((data) => ((data.field_name === "landing_gif_status") && (data.field_value === 'Active')))
       ? gSValues?.length > 0 && gSValues.find((data) => data.field_name === "landing_gif") &&
       gSValues.find((data) => data.field_name === "landing_gif").field_value &&
-      <div className="full-img-loader">
-        <Image src={gSValues.find((data) => data.field_name === "landing_gif").field_value} />
-      </div>
+      <>
+        <div className="full-img-loader for-desktop">
+          <Image src={gSValues.find((data) => data.field_name === "landing_gif").field_value} />
+        </div>
+        <div className="full-img-loader for-responsive">
+          <Image src={gSValues.find((data) => data.field_name === "landing_gif").field_value} />
+        </div>
+      </>
       : //!pageAnimatedLoading &&
       <Animate transitionAppear transitionName="fade">
         {/* <div>{setGSValues[0]}</div> */}
@@ -274,7 +277,7 @@ function Userform() {
                     label="Postal/Zip Code"
                     rules={[{ required: true, type: "number", min: 100000, max: 999999, message: '6 digits Postal/Zip Code Required!' }]}
                   >
-                    <InputNumber style={{ width: '101%' }} placeholder='Postal/Zip Code' />
+                    <InputNumber style={{ width: '101%' }} placeholder='Postal/Zip Code' className="input-type-number-box left" />
                   </Form.Item>
                 </Col>
                 <Col className='title-cus' span={12}> </Col>
@@ -284,7 +287,7 @@ function Userform() {
                     label="Phone Number"
                     rules={[{ required: true, type: "number", min: 1000000000, max: 9999999999, message: '10 digits Phone No Required!' }]}
                   >
-                    <InputNumber style={{ width: '101%' }} placeholder="XXXXXXXXXX" />
+                    <InputNumber style={{ width: '101%' }} placeholder="XXXXXXXXXX" className="input-type-number-box left" />
                   </Form.Item>
                 </Col>
                 <Col className='custom-width' span={12}>
@@ -300,14 +303,14 @@ function Userform() {
                   </Form.Item>
                 </Col>
                 <Col className='title-cus' span={24}>  <Title level={5}>Products</Title></Col>
-                <Col className='custom-width' span={24} >
-                  <Form.List name="products" label="Products">
+                <Col className='custom-width position-relative' span={24} >
+                  <Form.List name="products" label="Products" className="product-form">
                     {(fields, { add, remove }) => (
                       <>
                         {fields.map((field, index) => (
-                          <Space align="baseline" key={"space-" + field.key}>
+                          <Space align="center" key={"space-" + field.key} className="flex-wrap" >
                             {console.log(index)}
-                            <Form.Item
+                            <Form.Item className="product-select-items"
                               {...field}
                               key={"category-" + field.key}
                               label="Product Category"
@@ -329,7 +332,7 @@ function Userform() {
 
                             {console.log(form?.getFieldValue('products'))}
 
-                            <Form.Item
+                            <Form.Item className="product-select-items"
                               {...field}
                               ey={"name-" + field.key}
                               label="Product Name"
@@ -351,7 +354,7 @@ function Userform() {
                             </Form.Item>
 
 
-                            <Form.Item
+                            <Form.Item className="product-select-items"
                               {...field}
                               key={"size-" + field.key}
                               label="Size"
@@ -384,7 +387,7 @@ function Userform() {
                             </Form.Item>
 
                             {/* {form.getFieldValue('products')[index]?.size && */}
-                            <Form.Item
+                            <Form.Item className="product-select-items"
                               {...field}
 
                               key={"quantity-" + field.key}
@@ -397,7 +400,7 @@ function Userform() {
                                 },
                               ]}
                             >
-                              <InputNumber
+                              <InputNumber className="input-type-number-box"
                                 disabled={form.getFieldValue('products')[index]?.size ? false : true} min="1" onChange={(e) => {
                                   const fields = form.getFieldsValue()
                                   const { products } = fields
@@ -422,12 +425,25 @@ function Userform() {
                         <Input className='form-input' placeholder='Product Details' />
                       </Form.Item> */}
                             {form.getFieldValue('products').length > 1 && <MinusCircleOutlined onClick={() => { removeFormFields(index); remove(field.name) }} />}
+                            {/* {(fields.length === (index + 1)) &&
+                              <div className="add-btn">
+                                <Form.Item>
+                                  <Button id="add_button" type="dashed" onClick={() => add({ productCategory: '', productName: '', size: '', quantity: '' }, { focus: true })} icon={<PlusOutlined />} />
+                                </Form.Item>
+                              </div>} */}
+                            {/* {(fields.length === (index + 1)) &&
+                              <div className="add-btn">
+                                <Form.Item>
+                                  <Button id="add_button" type="dashed" onClick={() => add({ productCategory: '', productName: '', size: '', quantity: '' }, { focus: true })} icon={<PlusOutlined />} />
+                                </Form.Item>
+                              </div>} */}
                           </Space>
                         ))}
-
-                        <Form.Item>
-                          <Button id="add_button" type="dashed" onClick={() => add({ productCategory: '', productName: '', size: '', quantity: '' }, { focus: true })} icon={<PlusOutlined />} />
-                        </Form.Item>
+                        <div className="add-btn">
+                          <Form.Item>
+                            <Button id="add_button" type="dashed" onClick={() => add({ productCategory: '', productName: '', size: '', quantity: '' }, { focus: true })} icon={<PlusOutlined />} />
+                          </Form.Item>
+                        </div>
                       </>
                     )}
                   </Form.List>
@@ -439,7 +455,7 @@ function Userform() {
                     label="Total Payment Amount"
                     rules={[{ required: true, message: 'Payment Amount Required!' }]}
                   >
-                    <Input className='form-input' placeholder='Total Payment Amount' />
+                    <InputNumber className='input-type-number-box left' placeholder='Total Payment Amount' />
                   </Form.Item>
                 </Col>
 
