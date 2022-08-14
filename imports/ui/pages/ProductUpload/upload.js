@@ -10,7 +10,7 @@ function ProductUpload() {
 
   const [massData, setMassData] = useState('')
   const upLoadExcelDataForProductDetails = () => {
-    Meteor.call("productcat.test",massData, (error, result) => {
+    Meteor.call("productcat.test", massData, (error, result) => {
       console.log(error);
       if (!error) {
         console.log("success");
@@ -87,13 +87,11 @@ function ProductUpload() {
     }
   }
 
-  const sampleCSVdownload = () =>
-  {
+  const sampleCSVdownload = () => {
     let headers = ["Product Category Name,Product Name,Size,Price"]
     list = []
-    for(i=0; i <=5; i++)
-    {
-      list.push(["Category Name "+i,"Product Name "+i,"Size "+i,i].join(","))
+    for (i = 0; i <= 5; i++) {
+      list.push(["Category Name " + i, "Product Name " + i, "Size " + i, i].join(","))
     }
     console.log("List---Map-", list)
     downloadFile({
@@ -120,15 +118,35 @@ function ProductUpload() {
 
   return (
     <div>
-        <ModuleHeading module='Upload Product Module'/>
-        <Form form={form}>
-            <input id="file-upload" accept=".xlsx,.xls,.csv" type="file" name="file-upload" onChange={(e) => uploadExcelForProduct(e, '')} />
-            <Button type="primary" onClick={upLoadExcelDataForProductDetails}>Submit</Button>
-            <Anchor affix={false} onClick={sampleCSVdownload}>
-              <Link href="#" title="Download Sample CSV" />
-            </Anchor>
-        </Form>
-        <Outlet/>
+      <ModuleHeading module='Upload Product Module' />
+      <Form form={form}>
+        <div className='d-flex'>
+          <div className='d-flex align-content-start flex-column'>
+            <div className="dashborad-common-filters with-li-divider-full">
+              <ul>
+                <li>
+                  <div className="filter-box with-upload">
+                    <input id="file-upload" accept=".xlsx,.xls,.csv" type="file" name="file-upload" onChange={(e) => uploadExcelForProduct(e, '')} />
+                    <span>Upload File</span>
+                  </div>
+                  <div className="common-footer-form-submit">
+              <Button type="primary" onClick={upLoadExcelDataForProductDetails}>Submit</Button>
+            </div>
+                </li>
+                <li className="alignselfstart pt8px">
+                  <div className="after-upload-down-link">
+                    {/* <Anchor affix={false} onClick={sampleCSVdownload}> */}
+                      <a href="javascript:;" onClick={sampleCSVdownload}>Download Sample CSV</a>
+                    {/* </Anchor> */}
+                  </div>
+                </li>
+              </ul>
+            </div>
+            
+          </div>
+        </div>
+      </Form>
+      <Outlet />
     </div>
   )
 }

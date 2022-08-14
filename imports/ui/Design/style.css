@@ -121,7 +121,7 @@ textarea,
     transition: .4s;
 }
 
-.user-form-main-page .ant-form .ant-row.module-heading  .ant-btn-primary {
+.user-form-main-page .ant-form .ant-row.module-heading .ant-btn-primary {
     background: #e2a93c;
     border-color: #e2a93c;
     border: 1px solid #e2a93c;
@@ -147,9 +147,11 @@ textarea,
     z-index: 999999;
     background-color: rgba(0, 0, 0, 0.24);
 }
-.full-img-loader.for-responsive{
+
+.full-img-loader.for-responsive {
     display: none;
 }
+
 .full-img-loader img {
     width: 100%;
     height: 100%;
@@ -186,9 +188,10 @@ textarea,
     .user-form-main-page .ant-form {
         max-width: unset;
         padding: 0;
-    
+
     }
-    .user-form-main-page .ant-form .ant-row.module-heading{
+
+    .user-form-main-page .ant-form .ant-row.module-heading {
         max-height: unset !important;
     }
 }
@@ -214,9 +217,11 @@ textarea,
 .user-form-main-page .ant-form .ant-form-item.product-select-items {
     width: 200px;
 }
-.flex-wrap{
+
+.flex-wrap {
     flex-wrap: wrap !important;
 }
+
 .user-form-main-page .ant-form .ant-form-item.product-select-items .ant-select-selector {
     display: flex;
     align-items: center;
@@ -234,51 +239,558 @@ textarea,
     -o-appearance: none;
     appearance: none;
 }
+
 .input-type-number-box.left .ant-input-number-input-wrap .ant-input-number-input {
     text-align: left !important;
 }
-@media (max-width: 767px){
-    .full-img-loader.for-desktop{
+
+@media (max-width: 767px) {
+    .full-img-loader.for-desktop {
         display: none;
     }
-    .full-img-loader.for-responsive{
+
+    .full-img-loader.for-responsive {
         display: flex;
     }
 }
-@media (max-width: 575px){
+
+@media (max-width: 575px) {
     .ant-form-item .ant-form-item-label {
         padding: 0 0 3px !important;
         line-height: 18px !important;
     }
+
     .ant-form-item {
-              margin-bottom: 13px !important;
+        margin-bottom: 13px !important;
     }
+
     .ant-radio-group {
         display: flex !important;
         flex-wrap: wrap !important;
         row-gap: 8px !important;
     }
+
     .user-form-main-page .ant-form .ant-row.module-heading .ant-col-12 {
         flex: 0 0 100%;
         max-width: 100%;
     }
+
     .user-form-main-page {
         row-gap: 15px;
         padding: 20px 12px 40px;
     }
+
     .user-form-main-page .main-section .logo .ant-image {
         width: 160px !important;
         height: 160px !important;
     }
+
     .user-form-main-page .main-section .right-box .text-container {
         font-size: 15px;
         margin-top: 10px;
         line-height: 25px;
     }
+
     .user-form-main-page .ant-form .form-title {
         font-size: 25px;
         padding: 0 0 14px;
         margin-bottom: 15px;
         color: #e2a93c
     }
+}
+
+/* start: layout */
+.ant-layout.ant-layout-has-sider {
+    position: relative;
+    padding-left: 240px !important;
+}
+
+.ant-layout-sider {
+    flex: unset !important;
+    min-width: unset !important;
+    width: 100% !important;
+    max-width: 240px !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    padding: 24px 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+button {
+    outline: none;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+.ant-layout-sider .ant-layout-header {
+    display: flex !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    line-height: unset !important;
+    height: unset !important;
+    margin: 0 0 16px !important;
+}
+
+.ant-layout-sider .ant-layout-header .site-logo {
+    width: 65px;
+    height: 65px;
+}
+
+.ant-layout-sider .ant-layout-header .site-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ant-layout-sider.ant-layout-sider-collapsed {
+    max-width: 80px !important;
+}
+
+.ant-layout-sider.ant-layout-sider-collapsed .ant-layout-header .site-logo {
+    width: 45px;
+    height: 45px;
+}
+
+.mainDashboard-toggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    background: transparent;
+    margin: 20px auto 0;
+    flex: 0 0 auto;
+    border: 0;
+    padding: 0;
+}
+
+.mainDashboard-toggle div {
+    width: 100%;
+    height: 1.33px;
+    border-radius: 3px;
+    background-color: #fff;
+    position: relative;
+    transition: all 250ms ease 0s;
+}
+
+.mainDashboard-toggle div::before,
+.mainDashboard-toggle div::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: inherit;
+    height: inherit;
+    background-color: #fff;
+    border-radius: 3px;
+    transition: all 250ms ease 0s;
+}
+
+.mainDashboard-toggle div::before {
+    -webkit-transform: translateY(-6px);
+    transform: translateY(-6px);
+}
+
+.mainDashboard-toggle div::after {
+    -webkit-transform: translateY(6px);
+    transform: translateY(6px);
+}
+
+.mainDashboard-toggle.active div {
+    background-color: transparent;
+}
+
+.mainDashboard-toggle.active div:after {
+    -webkit-transform: translateY(0) rotate(45deg);
+    transform: translateY(0) rotate(45deg);
+}
+
+.mainDashboard-toggle.active div::before {
+    -webkit-transform: translateY(0) rotate(-45deg);
+    transform: translateY(0) rotate(-45deg);
+}
+
+.ant-layout.ant-layout-has-sider .site-layout .ant-layout-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 24px !important;
+}
+
+.ant-layout .ant-layout-content {
+    padding: 32px;
+}
+
+.ant-layout-content .dashborad-main-body {
+    background: #fff;
+    padding: 24px;
+    border-radius: 24px;
+    height: calc(100vh - 132px);
+    overflow: auto;
+}
+
+.ant-layout-content .module-content-with-pagination {
+    height: calc(100vh - 258px);
+    overflow: auto;
+    margin: 0 -24px;
+    padding: 0 24px;
+}
+
+.ant-layout-content .module-content-with-pagination::-webkit-scrollbar-track {
+    background: #eeee;
+    border-radius: 5px;
+}
+
+
+.ant-layout-content .module-content-with-pagination::-webkit-scrollbar-thumb {
+    background: #5168f4;
+    border-radius: 5px;
+}
+
+
+.ant-layout-content .module-content-with-pagination::-webkit-scrollbar {
+    width: 8px;
+}
+
+.ant-layout-sider .ant-menu {
+    height: calc(100vh - 114px);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+body.sitebar-active .ant-layout.ant-layout-has-sider {
+    padding-left: 80px !important;
+}
+
+.dashbaord-body-heading {
+    padding: 0 0 22px;
+    border-bottom: 1px solid #ccc;
+    margin: 0 0 24px;
+}
+
+.dashbaord-body-heading h1 {
+    margin: 0;
+    font-size: 20px;
+    line-height: 28px;
+    color: #000;
+    font-weight: 600;
+}
+
+.dashborad-common-filters {
+    padding: 0 0 24px;
+}
+
+.dashborad-common-filters ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 15px;
+    row-gap: 15px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.dashborad-common-filters li .filter-btn .ant-btn {
+    color: #fff;
+    border-color: #1890ff;
+    background: #1890ff;
+    border-radius: 30px;
+    height: 40px;
+    padding: 0 16px;
+    transition: .5s;
+}
+
+.dashborad-common-filters li .filter-box .ant-form-item {
+    margin: 0;
+}
+
+.dashborad-common-filters li .filter-box .ant-form-item .ant-form-item-row {
+    display: flex;
+    align-items: center;
+
+}
+
+.dashborad-common-filters li .filter-box .ant-form-item .ant-form-item-row .ant-form-item-control {
+    width: 180px !important;
+}
+.dashborad-common-filters li .filter-box{
+    position: relative;
+}
+.dashborad-common-filters li .filter-box.with-search-btn{
+
+} 
+.dashborad-common-filters li .filter-box.with-search-btn .ant-input{
+    width: 265px !important;
+    padding-right: 54px !important;
+}
+.dashborad-common-filters li .filter-box.with-search-btn .ant-btn{
+    position: absolute;
+    top: 0 !important;
+    right: 0 !important;
+    z-index: 1 !important;
+    height: 100% !important;
+    border-radius: 0 30px 30px 0 !important;
+}
+.dashborad-common-filters li .filter-box.with-upload{
+    position: relative;
+    background: #fff;
+    width: 220px;
+    border-radius: 30px;
+    height: 42px;
+    overflow: hidden;
+    border: 1px solid #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 16px;
+    background-color: #ccc;
+}
+.dashborad-common-filters li .filter-box.with-upload span{
+color: #000;
+font-weight: 400;
+font-size: 14px;
+}
+.dashborad-common-filters li .filter-box.with-upload input{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    appearance: none;
+    opacity: 0;
+}
+.m-0 {
+    margin: 0 !important;
+}
+
+.ml-auto {
+    margin-left: auto !important;
+}
+
+.mr-auto {
+    margin-right: auto !important;
+}
+
+.mx-auto {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.dashborad-common-filters.lerg-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 24px;
+    row-gap: 10px;
+}
+.dashborad-common-filters.lerg-content ul{
+    width: unset;
+}
+.dashborad-common-filters.lerg-content ul li{
+position: relative;
+}
+.common-footer-form-submit{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    padding: 10px 0 0;
+}
+.alignselfstart{
+    align-self: flex-start !important;
+}
+.pt8px{
+    padding-top: 8px !important;
+}
+.flex-column{
+    flex-direction: column !important;
+}
+.d-flex{
+    display: flex !important;
+}
+.align-content-start{
+    align-items: flex-start !important;
+}
+/* end: layout */
+.login-main-div{
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+.login-main-div .login-form{
+    width: 100%;
+    max-width: 436px;
+    border-radius: 15px;
+    background: #fff;
+    box-shadow: 1px -1px 9px 0px #bfbfbf;
+    padding: 20px;
+}
+
+.login-main-div .login-form .ant-row{
+    flex-wrap: wrap !important;
+}
+.login-main-div .login-form .ant-form-item-label{
+    width: 100% !important;
+    flex: 0 0 100%  !important;
+    max-width: 100%  !important;
+    text-align: left !important;
+}
+.login-main-div .login-form .ant-form-item-control{
+    width: 100% !important;
+    flex: 0 0 100%  !important;
+    max-width: 100%  !important;
+    margin: 0 !important;
+}
+
+.login-main-div .login-form input {
+    border-radius: 0px !important;
+    
+}
+.login-main-div .login-form .ant-btn{
+    width: 100% !important;
+    height: 45px !important;
+}
+.login-main-div .login-form .logo{
+    display: table;
+    margin: 5px auto 10px;
+}
+.login-main-div .login-form .logo img{
+    width: 80px;
+    height: 80px;
+}
+@media (max-width: 575px){
+    .login-main-div .login-form {
+        max-width: calc(100% - 24px);
+    }
+}
+.dashborad-common-filters.with-li-divider-full li:first-child{
+border-right: 1px solid #ccc;
+padding-right: 16px;
+}
+.overlay-sidebar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    opacity: 0;
+}
+@media (max-width: 991px){
+    .ant-layout-sider{
+        transform: translate(-100%);
+        transition: .5s;
+        z-index: 995 !important;
+    }
+    .overlay-sidebar{
+        display: block;
+        z-index: 994 !important;
+    }
+    .mainDashboard-toggle{
+      transition: .5s;
+    }
+    .ant-layout.ant-layout-has-sider,
+    body.sitebar-active .ant-layout.ant-layout-has-sider{
+        padding-left: 0 !important;
+    }
+    .ant-layout-sider.ant-layout-sider-collapsed{
+        max-width: 240px !important;
+        width: 100% !important;
+        transform: translate(0);
+    }
+    .ant-menu.ant-menu-inline-collapsed > .ant-menu-item .ant-menu-item-icon + span, .ant-menu.ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-item .ant-menu-item-icon + span, .ant-menu.ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-submenu > .ant-menu-submenu-title .ant-menu-item-icon + span, .ant-menu.ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title .ant-menu-item-icon + span, .ant-menu.ant-menu-inline-collapsed > .ant-menu-item .anticon + span, .ant-menu.ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-item .anticon + span, .ant-menu.ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-submenu > .ant-menu-submenu-title .anticon + span, .ant-menu.ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title .anticon + span {
+        display: inline-block !important;
+         opacity: 1 !important;
+    }
+    .ant-menu.ant-menu-inline-collapsed > .ant-menu-item, .ant-menu.ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-item, .ant-menu.ant-menu-inline-collapsed > .ant-menu-item-group > .ant-menu-item-group-list > .ant-menu-submenu > .ant-menu-submenu-title, .ant-menu.ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title {
+        padding: 0 24px !important;
+    }
+    body.sitebar-active .ant-layout.ant-layout-has-sider .mainDashboard-toggle {
+        z-index: 996 !important;
+        position: relative;
+        margin-left: 181px;
+    }
+    .ant-table-content{
+        width: 100%;
+        overflow-y: hidden;
+        overflow-x: auto;
+    }
+    .ant-table-content table{
+        min-width: 767px;
+    }
+}
+
+@media (max-width: 575px){
+    .ant-layout .ant-layout-content {
+        padding: 18px;
+    }
+    .ant-layout-content .dashborad-main-body {
+        padding: 12px;
+    }
+    .dashborad-common-filters li .filter-box .ant-form-item .ant-form-item-label > label{
+        height: unset !important;
+    }
+    .dashbaord-body-heading h1 {
+        font-size: 16px;
+        line-height: 26px;
+    }
+    .dashbaord-body-heading {
+        padding: 0 0 11px;
+        margin: 0 0 14px;
+    }
+    .dashborad-common-filters ul {
+        column-gap: 0;
+        row-gap: 0;
+        margin: -4px;
+    }
+    .dashborad-common-filters li .filter-box .ant-form-item .ant-form-item-row .ant-form-item-control {
+        width: 100% !important;
+    }
+    .dashborad-common-filters ul li{
+        width: 100%;
+        max-width: 50%;
+        padding: 4px;
+    }
+    .dashborad-common-filters li .filter-box.with-upload {
+        width: 100%;
+    }
+    .dashborad-common-filters.with-li-divider-full li:first-child{
+        max-width: 70%;
+        padding-right: 12px;
+    }
+    .dashborad-common-filters.with-li-divider-full li:nth-child(2){
+        max-width: 30%;
+        padding-left: 12px;
+    }
+    .dashborad-common-filters.lerg-content {
+        align-items: center;
+        row-gap: 5px;
+        flex-wrap: wrap;
+    }
+    .dashborad-common-filters.lerg-content ul.ml-auto{
+        margin-left: unset !important;
+    }
+    .dashborad-common-filters li .filter-box.with-search-btn .ant-input {
+        width: 198px !important;
+    }
+    
 }

@@ -4,10 +4,10 @@ import ModuleHeading from '../ModuleHeading'
 
 function ClientDetails() {
   return (
-    <div>
+    <>
         <ModuleHeading module='Client Data Module'/>
         <Outlet/>
-    </div>
+    </>
   )
 }
 

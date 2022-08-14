@@ -206,10 +206,11 @@ function Userform() {
           <div className="user-form-main-page">
             <div className='main-section'>
               <div className="left-box">
-                <div className="logo">
+                <div className="logo" style={{fontSize: "70px", color: "#e2a93c", fontFamily: "cursive"}}>
                   {gSValues?.length > 0 && gSValues.find((data) => data.field_name === "site_logo") &&
                     gSValues.find((data) => data.field_name === "site_logo").field_value &&
-                    <Image width={200} src={gSValues.find((data) => data.field_name === "site_logo").field_value} />
+                    // <Image width={200} src={gSValues.find((data) => data.field_name === "site_logo").field_value} />
+                    "Sohag"
                   }
                 </div>
               </div>

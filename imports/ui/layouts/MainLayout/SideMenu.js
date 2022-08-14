@@ -8,7 +8,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Header } from "antd/lib/layout/layout";
 
 const { Sider} = Layout;
-const SideMenu = ({collapsed}) => {
+const SideMenu = ({collapsed, toggle}) => {
 
     const [defaultKey, setDefaultKey] = useState([]);
     const location = useLocation();
@@ -23,6 +23,7 @@ const SideMenu = ({collapsed}) => {
       }
 
       const test =(key) => {
+        // toggle && toggle()
         let keydefault=[];
         keydefault.push(key.keyPath[0])
         setDefaultKey(keydefault)
@@ -46,7 +47,12 @@ const SideMenu = ({collapsed}) => {
  
     return (
         <Sider trigger={null} collapsible collapsed={collapsed}>
-            <Header className="site-header"></Header>
+            <Header className="site-header">
+              <div className="site-logo" style={{fontSize: "20px", color: "#e2a93c", fontFamily: "cursive"}}>
+                {/* <img src="https://i.picsum.photos/id/870/200/300.jpg?blur=2&grayscale&hmac=ujRymp644uYVjdKJM7kyLDSsrqNSMVRPnGU99cKl6Vs"></img> */}
+                Sohag
+              </div>
+            </Header>
             <Menu
                 theme="dark"
                 mode="inline"

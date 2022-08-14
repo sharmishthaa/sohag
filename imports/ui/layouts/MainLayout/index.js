@@ -1,5 +1,5 @@
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Button, Col, Layout, Menu, Row } from 'antd';
 import {
   MenuUnfoldOutlined,
@@ -21,33 +21,45 @@ const MainLayout =() => {
   const logout = () => {
     Meteor.logout();
   }
-  
+  useEffect(() => {
+    collapsed ? 
+  document.querySelector('body').classList.add("sitebar-active")
+  : document.querySelector('body').classList.remove("sitebar-active")
+}, [collapsed]);
  return (
+  <>
       <Layout className='h-w-100'>
-        <SideMenu collapsed={collapsed}/>
+        <SideMenu collapsed={collapsed} toggle={toggle} />
         <Layout className="site-layout">
           <Header className="site-header">
-            <Row>
-              <Col span={12}>
-                {
+           
+                <div className="left-toggle-btn">
+                  <button className={collapsed ? "mainDashboard-toggle active":"mainDashboard-toggle"} onClick={toggle}>
+                    <div></div>
+                  </button>
+                {/* {
                   collapsed ? <MenuUnfoldOutlined onClick={toggle}/> : 
                               <MenuFoldOutlined onClick={toggle}/> 
-                }
-              </Col>
-              
-              <Col span={12}>
+                } */}
+                </div>
+            
                 <div className='logout-button'>
                   <Button type="primary" onClick={logout}>Logout</Button>
                   {/* <Button type="primary" onClick={changepass}>Change Password</Button> */}
                 </div>
-              </Col>
-            </Row>
+              
           </Header>
           <Content>
+            <div className="dashborad-main-body">
              <Outlet />
+             </div>
           </Content>
         </Layout>
       </Layout>
+      {collapsed &&
+      <div className="overlay-sidebar" onClick={toggle}></div>
+      }
+      </>
     );
   
 }
