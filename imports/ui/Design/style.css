@@ -103,7 +103,7 @@ textarea,
 .ant-input-number-input,
 .ant-input-number,
 .ant-select-single .ant-select-selector {
-    border-radius: 30px !important;
+    border-radius: 5px !important;
     height: 42px !important;
     width: 100% !important;
 }
@@ -115,7 +115,7 @@ textarea,
 .user-form-main-page .ant-form .ant-btn {
     height: 49px;
     width: 180px;
-    border-radius: 50px;
+    border-radius: 5px;
     font-size: 15px;
     font-weight: 500;
     transition: .4s;

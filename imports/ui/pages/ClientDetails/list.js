@@ -9,6 +9,9 @@ import {
   EditOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from 'react-router-dom';
+import Cryptr from 'cryptr';
+
+const cryptr = new Cryptr('snow');
 
 const { Search } = Input;
 
@@ -51,21 +54,25 @@ function ClientdataList() {
       title: 'Address',
       dataIndex: 'address',
       key: 'address',
+      render: (text, record) => <Typography.Text>{cryptr.decrypt(text)}</Typography.Text>
     },
     {
       title: 'Landmark',
       dataIndex: 'landmark',
       key: 'landmark',
+      render: (text, record) => <Typography.Text>{cryptr.decrypt(text)}</Typography.Text>
     },
     {
       title: 'Zip / Postal Code',
       dataIndex: 'postal_code',
       key: 'postal_code',
+      render: (text, record) => <Typography.Text>{cryptr.decrypt(text)}</Typography.Text>
     },
     {
       title: 'Phone',
       dataIndex: 'phone',
       key: 'phone',
+      render: (text, record) => <Typography.Text>{cryptr.decrypt(text)}</Typography.Text>
     },
     {
       title: 'Order Date Time',
@@ -98,8 +105,8 @@ function ClientdataList() {
 
   const onFinish = (values) => {
     const lo_orderdata = { ...values }
-    lo_orderdata.from_date = values.from_date ? moment(values.from_date).format('YYYY-MM-DD') : null
-    lo_orderdata.to_date = values.to_date ? moment(values.to_date).toDate('YYYY-MM-DD') : null
+    lo_orderdata.from_date = values.from_date?moment(values.from_date).format('YYYY-MM-DD'):null
+    lo_orderdata.to_date = values.to_date?moment(values.to_date).toDate('YYYY-MM-DD'):null
     // let headers = ["Id,Name,Surname,Age"];
 
     // let orderCsv = usersData.users.reduce((acc, user) => {
@@ -141,58 +148,73 @@ function ClientdataList() {
         //   //return acc;
 
         // });
-        let temp_obj, total_products = ''
+        let temp_obj, total_products=''
         result.map((order, index) => {
-          let { _id, name, customsizesize, dob, address, landmark, phone, postal_code, order_type, payment_mode, order_date_time, total_payment_amount, order_no, product_cat, product_name, size, quantity } = order;
-          console.log('_id', _id)
-          let product_size = size ? size : customsizesize
+          let { _id, name, customsizesize, dob, address, landmark, phone, postal_code, order_type, payment_mode, order_date_time,total_payment_amount, order_no, product_cat, product_name, size, quantity} = order;
+          console.log('_id',_id)
+          let product_size = size?size:customsizesize
           let product_details = product_cat + '/' + product_name + '/' + product_size + '/' + quantity
-          let date_of_birth = dob ? moment(dob).format('DD/MM/YYYY') : ''
-          let fulladdress = landmark ? address + ' ' + landmark : address
-          if (index === 0) {
-            if (result.length - 1 === index) {
-              list.push([name, date_of_birth, fulladdress, postal_code, phone, order_no, order_type, product_details, total_payment_amount, payment_mode, moment(order_date_time).format('YYYY-MM-DD')].join(","))
+          let date_of_birth = dob?moment(dob).format('DD/MM/YYYY'):''
+          let dcrypt_phone = cryptr.decrypt(phone)
+          let dcrypt_postal_code = cryptr.decrypt(postal_code)
+          let fulladdress = landmark?cryptr.decrypt(address)+' '+cryptr.decrypt(landmark):cryptr.decrypt(address)
+          if(index === 0)
+          {
+            if(result.length-1 === index)
+            {
+              list.push([name, date_of_birth, fulladdress, dcrypt_postal_code, dcrypt_phone, order_no, order_type, product_details, total_payment_amount, payment_mode, moment(order_date_time).format('YYYY-MM-DD')].join(","))
             }
-            else {
+            else
+            {
               temp_obj = order
-              temp_obj.date_of_birth = dob ? moment(dob).format('DD/MM/YYYY') : ''
-              temp_obj.fulladdress = landmark ? address + ' ' + landmark : address
-              total_products = product_details
+              temp_obj.dcrypt_phone = cryptr.decrypt(phone)
+              temp_obj.dcrypt_postal_code = cryptr.decrypt(postal_code)
+              temp_obj.fulladdress = landmark?cryptr.decrypt(address)+' '+cryptr.decrypt(landmark):cryptr.decrypt(address)
+              temp_obj.date_of_birth = dob?moment(dob).format('DD/MM/YYYY'):''
+              total_products=product_details
               console.log('temp_obj._id', temp_obj._id)
               console.log("total_products index 0", total_products)
             }
           }
-          else if (temp_obj._id === _id) {
-            console.log('yes', result.length - 1, '------', index)
-            console.log('name', name)
-            if (result.length - 1 === index) {
-              total_products = total_products + '--' + product_details
-              list.push([name, date_of_birth, fulladdress, postal_code, phone, order_no, order_type, total_products, total_payment_amount, payment_mode, moment(order_date_time).format('YYYY-MM-DD')].join(","))
+          else if(temp_obj._id === _id)
+          {
+            console.log('yes',result.length-1,'------',index)
+            console.log('name',name)
+            if(result.length-1 === index)
+            {
+              total_products=total_products+'--'+product_details
+              list.push([name, date_of_birth, fulladdress, dcrypt_postal_code, dcrypt_phone, order_no, order_type, total_products, total_payment_amount, payment_mode, moment(order_date_time).format('YYYY-MM-DD')].join(","))
             }
-            else {
+            else
+            {
               console.log("test last element no else if")
-              total_products = total_products + '--' + product_details
+              total_products=total_products+'--'+product_details
               console.log("total_products index !0", total_products)
             }
           }
-          else {
-            console.log('no', result.length - 1, '------', index)
-            console.log('name', name)
-            if (result.length - 1 === index) {
-              list.push([temp_obj.name, temp_obj.date_of_birth, temp_obj.fulladdress, temp_obj.postal_code, temp_obj.phone, temp_obj.order_no, temp_obj.order_type, total_products, temp_obj.total_payment_amount, temp_obj.payment_mode, moment(temp_obj.order_date_time).format('YYYY-MM-DD')].join(","))
+          else
+          {
+            console.log('no',result.length-1,'------',index)
+            console.log('name',name)
+            if(result.length-1 === index)
+            {
+              list.push([temp_obj.name, temp_obj.date_of_birth, temp_obj.fulladdress, temp_obj.dcrypt_postal_code, temp_obj.dcrypt_phone, temp_obj.order_no, temp_obj.order_type, total_products, temp_obj.total_payment_amount, temp_obj.payment_mode, moment(temp_obj.order_date_time).format('YYYY-MM-DD')].join(","))
               list.push([name, date_of_birth, fulladdress, postal_code, phone, order_no, order_type, product_details, total_payment_amount, payment_mode, moment(order_date_time).format('YYYY-MM-DD')].join(","))
               console.log("test last element else")
             }
-            else {
+            else
+            {
               console.log("test last element no else")
-              list.push([temp_obj.name, temp_obj.date_of_birth, temp_obj.fulladdress, temp_obj.postal_code, temp_obj.phone, temp_obj.order_no, temp_obj.order_type, total_products, temp_obj.total_payment_amount, temp_obj.payment_mode, moment(temp_obj.order_date_time).format('YYYY-MM-DD')].join(","))
-              temp_obj = order
-              temp_obj.date_of_birth = dob ? moment(dob).format('DD/MM/YYYY') : ''
-              temp_obj.fulladdress = landmark ? address + ' ' + landmark : address
-              total_products = product_details
+              list.push([temp_obj.name, temp_obj.date_of_birth, temp_obj.fulladdress, temp_obj.dcrypt_postal_code, temp_obj.dcrypt_phone, temp_obj.order_no, temp_obj.order_type, total_products, temp_obj.total_payment_amount, temp_obj.payment_mode, moment(temp_obj.order_date_time).format('YYYY-MM-DD')].join(","))
+              temp_obj=order
+              temp_obj.date_of_birth = dob?moment(dob).format('DD/MM/YYYY'):''
+              temp_obj.dcrypt_phone = cryptr.decrypt(phone)
+              temp_obj.dcrypt_postal_code = cryptr.decrypt(postal_code)
+              temp_obj.fulladdress = landmark?cryptr.decrypt(address)+' '+cryptr.decrypt(landmark):cryptr.decrypt(address)
+              total_products=product_details
             }
           }
-
+          
         });
 
         // result.map((order, index) => {
@@ -248,7 +270,7 @@ function ClientdataList() {
         //       total_products=product_details
         //     }
         //   }
-
+          
         // });
         console.log("List---Map-", list)
         downloadFile({
@@ -310,39 +332,33 @@ function ClientdataList() {
   return (
     <>
       <div className='module-content-with-pagination'>
-        <div className="dashborad-common-filters">
-          <Form
-            form={form}
-            onFinish={onFinish}>
-            <ul>
-              <li>
-                <div className="filter-box">
-                  <Form.Item
-                    name="from_date"
-                    label="From"
-                  >
-                    <DatePicker placeholder="00-00-0000" />
-                  </Form.Item>
-                </div>
-              </li>
-              <li>
-                <div className="filter-box">
-                  <Form.Item
-                    name="to_date"
-                    label="To"
-                  >
-                    <DatePicker placeholder="00-00-0000" />
-                  </Form.Item>
-                </div>
-              </li>
-              <li>
-                <div className="filter-btn">
-                  <Button type="button" htmlType="submit">Export to CSV</Button>
-                </div>
-              </li>
-            </ul>
-          </Form>
-        </div>
+        <Form
+          form={form}
+          onFinish={onFinish}>
+          <Row className='module-heading'>
+            <Col className='custom-width' span={8}>
+              <Form.Item
+                name="from_date"
+                label="From"
+              >
+                <DatePicker placeholder="00-00-0000" />
+              </Form.Item>
+            </Col>
+
+            <Col className='custom-width' span={8}>
+              <Form.Item
+                name="to_date"
+                label="To"
+              >
+                <DatePicker placeholder="00-00-0000" />
+              </Form.Item>
+            </Col>
+
+            <Col className='title-cus' span={8}>
+              <Button type="button" htmlType="submit">Export to CSV</Button>
+            </Col>
+          </Row>
+        </Form>
         {/* <Search placeholder="input search text" onSearch={handleSearch} enterButton className='search-div'/> */}
         <Table className='listing_table'
           pagination={isPagination && {
