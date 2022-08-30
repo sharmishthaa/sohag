@@ -9,6 +9,9 @@ import {
   EditOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from 'react-router-dom';
+import Cryptr from 'cryptr';
+
+const cryptr = new Cryptr('snow');
 
 const { Search } = Input;
 
@@ -51,21 +54,25 @@ function ClientdataList() {
       title: 'Address',
       dataIndex: 'address',
       key: 'address',
+      render: (text, record) => <Typography.Text>{cryptr.decrypt(text)}</Typography.Text>
     },
     {
       title: 'Landmark',
       dataIndex: 'landmark',
       key: 'landmark',
+      render: (text, record) => <Typography.Text>{cryptr.decrypt(text)}</Typography.Text>
     },
     {
       title: 'Zip / Postal Code',
       dataIndex: 'postal_code',
       key: 'postal_code',
+      render: (text, record) => <Typography.Text>{cryptr.decrypt(text)}</Typography.Text>
     },
     {
       title: 'Phone',
       dataIndex: 'phone',
       key: 'phone',
+      render: (text, record) => <Typography.Text>{cryptr.decrypt(text)}</Typography.Text>
     },
     {
       title: 'Order Date Time',
@@ -148,18 +155,22 @@ function ClientdataList() {
           let product_size = size?size:customsizesize
           let product_details = product_cat + '/' + product_name + '/' + product_size + '/' + quantity
           let date_of_birth = dob?moment(dob).format('DD/MM/YYYY'):''
-          let fulladdress = landmark?address+' '+landmark:address
+          let dcrypt_phone = cryptr.decrypt(phone)
+          let dcrypt_postal_code = cryptr.decrypt(postal_code)
+          let fulladdress = landmark?cryptr.decrypt(address)+' '+cryptr.decrypt(landmark):cryptr.decrypt(address)
           if(index === 0)
           {
             if(result.length-1 === index)
             {
-              list.push([name, date_of_birth, fulladdress, postal_code, phone, order_no, order_type, product_details, total_payment_amount, payment_mode, moment(order_date_time).format('YYYY-MM-DD')].join(","))
+              list.push([name, date_of_birth, fulladdress, dcrypt_postal_code, dcrypt_phone, order_no, order_type, product_details, total_payment_amount, payment_mode, moment(order_date_time).format('YYYY-MM-DD')].join(","))
             }
             else
             {
               temp_obj = order
+              temp_obj.dcrypt_phone = cryptr.decrypt(phone)
+              temp_obj.dcrypt_postal_code = cryptr.decrypt(postal_code)
+              temp_obj.fulladdress = landmark?cryptr.decrypt(address)+' '+cryptr.decrypt(landmark):cryptr.decrypt(address)
               temp_obj.date_of_birth = dob?moment(dob).format('DD/MM/YYYY'):''
-              temp_obj.fulladdress = landmark?address+' '+landmark:address
               total_products=product_details
               console.log('temp_obj._id', temp_obj._id)
               console.log("total_products index 0", total_products)
@@ -172,7 +183,7 @@ function ClientdataList() {
             if(result.length-1 === index)
             {
               total_products=total_products+'--'+product_details
-              list.push([name, date_of_birth, fulladdress, postal_code, phone, order_no, order_type, total_products, total_payment_amount, payment_mode, moment(order_date_time).format('YYYY-MM-DD')].join(","))
+              list.push([name, date_of_birth, fulladdress, dcrypt_postal_code, dcrypt_phone, order_no, order_type, total_products, total_payment_amount, payment_mode, moment(order_date_time).format('YYYY-MM-DD')].join(","))
             }
             else
             {
@@ -187,17 +198,19 @@ function ClientdataList() {
             console.log('name',name)
             if(result.length-1 === index)
             {
-              list.push([temp_obj.name, temp_obj.date_of_birth, temp_obj.fulladdress, temp_obj.postal_code, temp_obj.phone, temp_obj.order_no, temp_obj.order_type, total_products, temp_obj.total_payment_amount, temp_obj.payment_mode, moment(temp_obj.order_date_time).format('YYYY-MM-DD')].join(","))
+              list.push([temp_obj.name, temp_obj.date_of_birth, temp_obj.fulladdress, temp_obj.dcrypt_postal_code, temp_obj.dcrypt_phone, temp_obj.order_no, temp_obj.order_type, total_products, temp_obj.total_payment_amount, temp_obj.payment_mode, moment(temp_obj.order_date_time).format('YYYY-MM-DD')].join(","))
               list.push([name, date_of_birth, fulladdress, postal_code, phone, order_no, order_type, product_details, total_payment_amount, payment_mode, moment(order_date_time).format('YYYY-MM-DD')].join(","))
               console.log("test last element else")
             }
             else
             {
               console.log("test last element no else")
-              list.push([temp_obj.name, temp_obj.date_of_birth, temp_obj.fulladdress, temp_obj.postal_code, temp_obj.phone, temp_obj.order_no, temp_obj.order_type, total_products, temp_obj.total_payment_amount, temp_obj.payment_mode, moment(temp_obj.order_date_time).format('YYYY-MM-DD')].join(","))
+              list.push([temp_obj.name, temp_obj.date_of_birth, temp_obj.fulladdress, temp_obj.dcrypt_postal_code, temp_obj.dcrypt_phone, temp_obj.order_no, temp_obj.order_type, total_products, temp_obj.total_payment_amount, temp_obj.payment_mode, moment(temp_obj.order_date_time).format('YYYY-MM-DD')].join(","))
               temp_obj=order
               temp_obj.date_of_birth = dob?moment(dob).format('DD/MM/YYYY'):''
-              temp_obj.fulladdress = landmark?address+' '+landmark:address
+              temp_obj.dcrypt_phone = cryptr.decrypt(phone)
+              temp_obj.dcrypt_postal_code = cryptr.decrypt(postal_code)
+              temp_obj.fulladdress = landmark?cryptr.decrypt(address)+' '+cryptr.decrypt(landmark):cryptr.decrypt(address)
               total_products=product_details
             }
           }

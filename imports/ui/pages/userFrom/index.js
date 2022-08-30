@@ -8,6 +8,9 @@ import { Typography, Button, Col, Form, Input, Row, InputNumber, Card, Select, U
 import moment from "moment";
 import Animate from 'rc-animate';
 import '../../Design/style.css'//copy
+import Cryptr from 'cryptr';
+
+const cryptr = new Cryptr('snow');
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -169,6 +172,10 @@ function Userform() {
     const lo_orderdata = { ...values }
     if (values.dob)
       lo_orderdata.dob = moment(values.dob).toDate()
+      lo_orderdata.phone = cryptr.encrypt(values.phone)
+      lo_orderdata.address = cryptr.encrypt(values.address)
+      lo_orderdata.landmark = cryptr.encrypt(values.landmark)
+      lo_orderdata.postal_code = cryptr.encrypt(values.postal_code)
     Meteor.call("orderdata.insert", lo_orderdata, (error, result) => {
       console.log(error);
       if (!error) {
@@ -381,7 +388,7 @@ function Userform() {
                                 ))}
                                 {productCategory?.length > 0 &&
                                   productCategory.find((data) => ((data._id === form.getFieldValue('products')[index]?.productCategory) && (data.product_category_name.toLowerCase().search('perfume') !== -1))) &&
-                                  <Option key={100} value={"10"}>10 ml</Option>
+                                  <Option key={100} value={"10 ml"}>10 ml</Option>
                                 }
                               </Select>
                             </Form.Item>
